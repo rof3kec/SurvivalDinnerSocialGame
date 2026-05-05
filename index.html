@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#080810" />
+  <title>Survivor Vecera</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { height: 100%; }
+    body {
+      background: #080810;
+      color: #EDEBE4;
+      font-family: 'Instrument Sans', sans-serif;
+      min-height: 100%;
+      min-height: -webkit-fill-available;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+    }
+    #root { min-height: 100vh; min-height: -webkit-fill-available; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.js"></script>
+
+  <script type="text/babel">
+    const { useState } = React;
+    const { Smartphone, Flame, ThumbsUp, ThumbsDown, Trophy, Target, XCircle, Scale, Globe, Shuffle, Ban, Users, BookOpen, ArrowLeft, ChevronRight } = LucideReact;
+
+    const QUESTIONS_BS = [
+      { group: "Ko bi prevario/la partnera ako bi znao/la da nece biti uhvacen/a?", hotseat: "Da li bi prevario/la partnera ako bi znao/la da necos biti uhvacen/a? Obrazlozi!" },
+      { group: "Ko je vec prevario/la i nikome nije rekao/la?", hotseat: "Jesi li ikad prevario/la nekoga a nikome rekao/la? Ispricaj!" },
+      { group: "Ko ima najveci body count u sobi?", hotseat: "Koliki je tvoj body count? Budi iskren/a!" },
+      { group: "Ko je ukrao/la nesto vrijedno i nikad se nije kajao/la?", hotseat: "Jesi li ikad ukrao/la nesto vrijedno? Kajas li se?" },
+      { group: "Ko bi prodao/la intimnu tajnu prijatelja za veliku sumu?", hotseat: "Da li bi prodao/la intimnu tajnu prijatelja za novac? Ciju bi najlakse prodao/la?" },
+      { group: "Ko je lagao/la partneru o tome gdje je bio/la?", hotseat: "Jesi li lagao/la partneru gdje si bio/la? Sta si zapravo radio/la?" },
+      { group: "Ko je imao/la seks dok je neko drugi bio u istom stanu?", hotseat: "Jesi li imao/la seks dok je neko drugi bio u istom stanu ili kuci? Detalji!" },
+      { group: "Ko bi najbrze prevario/la kompaniju na troskovima?", hotseat: "Da li bi prevario/la kompaniju na troskovima? Jesi li to ikad uradio/la?" },
+      { group: "Ko je najvjerovatnije da ima tajni profil na dating appu?", hotseat: "Imas li ili si ikad imao/la tajni profil na dating appu dok si bio/la u vezi?" },
+      { group: "Ko bi spavao/la sa sefom za unapredenje?", hotseat: "Da li bi spavao/la sa sefom za unapredenje? Gdje ti je granica?" },
+      { group: "Ko se budio/la pored nekoga cije ime nije znao/la?", hotseat: "Jesi li se probudio/la pored nekoga cije ime nisi znao/la? Ispricaj!" },
+      { group: "Ko je slao/la eksplicitne poruke nekome ko nije partner?", hotseat: "Jesi li slao/la eksplicitne poruke nekome ko nije bio/la tvoj partner? Kome?" },
+      { group: "Ko bi ukrao/la novac od prijatelja ako bi znao/la da nece biti uhvacen/a?", hotseat: "Da li bi ukrao/la novac od prijatelja ako bi znao/la da necos biti uhvacen/a?" },
+      { group: "Ko je glumio/la orgazam?", hotseat: "Jesi li ikad glumio/la orgazam? Sa kim i zasto?" },
+      { group: "Ko je najvjerovatnije da ima neku tajnu fetisu?", hotseat: "Imas li neku tajnu fetisu? Koja je?" },
+      { group: "Ko je bio/la treci u necijoj vezi?", hotseat: "Jesi li ikad bio/la treci u necijoj vezi, svjesno ili nesvjesno?" },
+      { group: "Ko je najvjerovatnije da gleda porno na poslu?", hotseat: "Jesi li ikad gledao/la porno za vrijeme radnog vremena?" },
+      { group: "Ko je ukrao/la nesto iz prodavnice i ponosan/na je na to?", hotseat: "Jesi li ikad ukrao/la nesto iz prodavnice? Kajas li se ili si ponosan/na?" },
+      { group: "Ko bi ostavio/la partnera zbog bogatog/e?", hotseat: "Da li bi ostavio/la partnera zbog nekoga znatno bogatijeg? Koliko bogat?" },
+      { group: "Ko je imao/la seks na prvom dejtu?", hotseat: "Jesi li imao/la seks na prvom dejtu? Ispricaj!" },
+      { group: "Ko lze o svom broju seksualnih partnera?", hotseat: "Lzes li o svom broju seksualnih partnera? Koji je pravi broj?" },
+      { group: "Ko bi spavao/la sa nekim u ovoj sobi uz pravu ponudu?", hotseat: "Da li bi spavao/la sa nekim ovdje uz pravu ponudu? S kim i za koliko?" },
+      { group: "Ko je najvjerovatnije da ima dvostruki zivot?", hotseat: "Imas li neku stranu sebe koju skoro niko ne zna? Sta je to?" },
+      { group: "Ko bi snimio/la seks video bez da pita partnera?", hotseat: "Da li bi snimio/la seks bez da pitas partnera? Jesi li to ikad uradio/la?" },
+      { group: "Ko je citao/la tude poruke bez dozvole?", hotseat: "Jesi li citao/la tude poruke bez dozvole? Cije i sta si pronasao/la?" },
+      { group: "Ko bi prevario/la na ispitu ili vec jeste?", hotseat: "Jesi li ikad varao/la na ispitu? Kako i kajas li se?" },
+      { group: "Ko je najgori u krevetu po sopstvenoj procjeni?", hotseat: "Koja je tvoja najveca slabost u krevetu? Budi iskren/a!" },
+      { group: "Ko bi najvjerovatnije zavrsio/la u zatvoru i zbog cega?", hotseat: "Zbog cega bi najvjerovatnije zavrsio/la u zatvoru? Budi iskren/a!" },
+      { group: "Ko je imao seks na najcudnijem mjestu?", hotseat: "Gdje je najcudnije mjesto na kome si imao/la seks? Detalji obavezni!" },
+      { group: "Ko bi spavao/la sa nekim od partnera prisutnih ovdje?", hotseat: "Da li bi spavao/la sa nekim od partnera prisutnih ovdje da si slobodan/na? S kim?" },
+      { group: "Ko je bio/la u najtoksicnijoj vezi svog zivota?", hotseat: "Koja je bila tvoja najtoksicnija veza? Sta si radio/la u njoj?" },
+      { group: "Ko bi pristao/la na seksualni predlog od privlacnog stranca?", hotseat: "Da li bi pristao/la na seksualni predlog od privlacnog stranca za jednu noc? Pod kojim uslovima?" },
+      { group: "Ko je imao/la seks sa nekim sa velikom razlikom u godinama?", hotseat: "Jesi li imao/la seks sa nekim sa velikom razlikom u godinama? Koliko velika razlika?" },
+      { group: "Ko je najvjerovatnije da je probao/la nesto ilegalno?", hotseat: "Jesi li ikad probao/la nesto ilegalno? Sta i kako je proslo?" },
+      { group: "Ko je poslao/la intimnu sliku nekome ko je nije trazio/la?", hotseat: "Jesi li ikad poslao/la intimnu sliku nekome ko je nije trazio/la? Ispricaj!" },
+      { group: "Ko bi varao/la u braku ako bi mu se ukazala savrsena prilika?", hotseat: "Da li bi varao/la u braku ako bi znao/la da nikad necos biti uhvacen/a?" },
+      { group: "Ko je najduze lagao/la partneru o necemu ozbiljnom?", hotseat: "Sta je najduze i najozbiljnije sto si lagao/la partneru? Koliko dugo?" },
+      { group: "Ko bi prihvatio/la novac od bogatog ljubavnika/ce?", hotseat: "Da li bi prihvatio/la finansijsku podrsku od bogatog ljubavnika/ce i ostao/la u toj vrsti veze?" },
+      { group: "Ko je imao/la seksualne fantazije o nekome u ovoj sobi?", hotseat: "Jesi li ikad imao/la seksualne fantazije o nekome ovdje? O kome?" },
+      { group: "Ko je bio/la u seksualnoj situaciji sa vise od jedne osobe?", hotseat: "Jesi li ikad bio/la u seksualnoj situaciji sa vise od jedne osobe? Ispricaj!" },
+      { group: "Ko bi uvijedio/la partnera da pristane na nesto sto ne zeli u krevetu?", hotseat: "Da li si ikad nagovorio/la partnera na nesto seksualno sto nije htio/htjela? Kako?" },
+      { group: "Ko je najvjerovatnije da je stalkao/la bivseg/u na mrezama?", hotseat: "Jesi li ikad stalkao/la bivseg/u na mrezama? Koliko daleko si otisao/la?" },
+      { group: "Ko bi spavao/la sa poznatom osobom samo zbog statusa?", hotseat: "Da li bi spavao/la sa poznatom osobom samo zbog toga sto je poznata? S kim bi najlakse?" },
+      { group: "Ko je imao/la seks na javnom mjestu?", hotseat: "Jesi li imao/la seks na javnom mjestu gdje te neko mogao vidjeti? Gdje i kako?" },
+      { group: "Ko bi iskoristio/la kompromitujuci materijal o bivsom/oj?", hotseat: "Da li bi iskoristio/la kompromitujuci materijal o bivsom/oj da dobijas nesto? Sta bi trazio/la?" },
+      { group: "Ko je lagao/la o svom poslu ili prihodima da bi impresionirao/la?", hotseat: "Jesi li ikad lagao/la o poslu ili prihodima da bi impresionirao/la nekoga? Kome i kako?" },
+      { group: "Ko bi napustio/la sve zbog savrsene seksualne hemije?", hotseat: "Da li bi napustio/la posao, grad i vezu zbog nekoga s kim imas savrsenu hemiju ali nista drugo zajednicko?" },
+      { group: "Ko se najvise stidi necega sto je uradio/la pijan/a?", hotseat: "Cega se najvise stidis od stvari koje si uradio/la pijan/a? Ispricaj!" },
+      { group: "Ko krije koliko novca zaista trosi?", hotseat: "Krijes li od partnera ili porodice koliko novca zaista trocis? Na sta?" },
+      { group: "Ko je bio/la najgori/a u krevetu i znao/la to?", hotseat: "Sjecas li se nekog seksualnog iskustva koje je bilo katastrofa? Ispricaj!" },
+      { group: "Ko bi pristao/la da bude placena pratnja bogatasu na putovanju?", hotseat: "Da li bi pristao/la da budes placena pratnja bogatasu na luksuznom putovanju?" },
+      { group: "Ko je najvjerovatnije da je imao/la seks sa kolegom/icom s posla?", hotseat: "Jesi li ikad imao/la seks ili romanticnu situaciju sa kolegom/icom? Ispricaj!" },
+      { group: "Ko bi pristao/la na open relationship ako bi partner to zahtijevao/la?", hotseat: "Da li bi pristao/la na otvorenu vezu ako bi partner to zahtijevao/la ili bi otisao/la?" },
+      { group: "Ko bi ostavio/la partnera putem poruke da moze proci nekaz njeno?", hotseat: "Da li bi ostavio/la partnera putem poruke ili ignorisanjem da si siguran/na da nema posljedica?" },
+      { group: "Ko je najvise iskompleksiran/a svojom prosloscu?", hotseat: "Koja stvar iz tvoje proslosti te najvise sramoti ili kompleksira danas?" },
+      { group: "Ko bi skinuo/la se za novac na internetu?", hotseat: "Da li bi ikad postavio/la eksplicitni sadrzaj na internet za novac? Pod kojim uslovima?" },
+      { group: "Ko je najvjerovatnije da je krisom snimao/la razgovor sa prijateljem/icom?", hotseat: "Jesi li ikad krisom snimao/la razgovor sa prijateljem ili partnerom? Zasto?" },
+      { group: "Ko je bio/la najvise obuzet/a nekim ko ga/je nije volio/la?", hotseat: "Jesi li ikad bio/la opsjednut/a nekim ko te nije uzvracalo osjecaje? Sta si radio/la?" },
+      { group: "Ko je bio/la toliko privucen/a nekim da je uradio/la nesto za sto se stidi?", hotseat: "Jesi li ikad bio/la toliko privucen/a nekim da si uradio/la nesto ponizavajuce da ga/je dobijas?" },
+      { group: "Ko je imao/la seks pod uticajem supstanci i zazalio/la?", hotseat: "Jesi li imao/la seks pod uticajem alkohola ili droga i zazalio/la? Ispricaj!" },
+      { group: "Ko je najvjerovatnije da je napravio/la lazni profil na mrezama?", hotseat: "Jesi li ikad napravio/la lazni profil na drustvenim mrezama? Zasto i sto si radio/la s njim?" },
+      { group: "Ko bi pristao/la da glumi nesto u krevetu sto mu/joj se ne svidja?", hotseat: "Da li si ikad glumio/la uzivanje u necemu sto ti se u krevetu nije svidjalo? Sta je to bilo?" },
+      { group: "Ko bi pristao/la da izda prijatelja za veliki karijerni napredak?", hotseat: "Da li bi iskoristio/la ili izdao/la prijatelja ako bi to znacilo veliki karijerni skok?" },
+      { group: "Ko je najvjerovatnije da je lazirao/la bolest da izbjegne obavezu?", hotseat: "Jesi li ikad lazirao/la bolest ili hitnu situaciju da izbjegnes nesto? Sta i zasto?" },
+      { group: "Ko bi potpisao/la ugovor o tajnosti da sakrije skandal bogatog partnera?", hotseat: "Da li bi potpisao/la NDA da sakrijes skandal bogatog/e partnera za veliku sumu novca?" },
+      { group: "Ko je najvjerovatnije da je imao/la seks u autu?", hotseat: "Jesi li ikad imao/la seks u autu? Gdje i kako je proslo?" },
+      { group: "Ko bi najbrze prekinuo/la prijateljstvo za dovoljno novca?", hotseat: "Za koliko novca bi prekinuo/la dugogodisnje prijateljstvo bez objasnjenja?" },
+      { group: "Ko bi napravio/la dijete bez pristanka partnera?", hotseat: "Da li bi ikad sabotirao/la kontracepciju bez znanja partnera? Budi iskren/a!" },
+      { group: "Ko je najvjerovatnije da je citao/la dnevnik nekoga bliskog?", hotseat: "Jesi li ikad citao/la neciji dnevnik ili privatne biljeske? Cije i sta si pronasao/la?" },
+      { group: "Ko bi pristao/la na brak iz interesa bez ljubavi?", hotseat: "Da li bi se ozenio/udala iz finansijskog interesa bez prave ljubavi? Za koliko?" },
+      { group: "Ko je najvjerovatnije da je lazirao/la orgazam vise od deset puta?", hotseat: "Koliko puta si otprilike glumio/la orgazam? Sa istom osobom ili razlicitim?" },
+      { group: "Ko bi najvjerovatnije pristao/la na swap partnera?", hotseat: "Da li bi pristao/la na razmjenu partnera sa bliskim parom? Pod kojim uslovima?" },
+      { group: "Ko je najvjerovatnije da je lagao/la terapeutu ili ljekaru?", hotseat: "Jesi li ikad lagao/la terapeutu ili ljekaru o necemu vaznom? Sta i zasto?" },
+      { group: "Ko je najvjerovatnije da je ukrao/la partnera od prijatelja?", hotseat: "Jesi li ikad bio/la zainteresovan/a za partnera bliskog prijatelja i djelovao/la po tome?" },
+      { group: "Ko bi najvjerovatnije pristao/la na seks u zamjenu za luksuzni poklon?", hotseat: "Da li bi pristao/la na seksualnu situaciju u zamjenu za skupocjeni poklon ili putovanje?" },
+      { group: "Ko bi pristao/la da bude sugarmama ili sugardaddy?", hotseat: "Da li bi pristao/la da finansiras mladju osobu u zamjenu za kompaniju i intimnost?" },
+      { group: "Ko je najvjerovatnije da je imao/la romansu sa osobom koja je bila u braku?", hotseat: "Jesi li ikad bio/la u romansi ili seksualnoj situaciji sa osobom koja je bila u braku? Ispricaj!" },
+      { group: "Ko bi najvjerovatnije ostavio/la partnera ako bi dobio/la nasljedstvo?", hotseat: "Da li bi promijenio/la svog partnera kada bi odjednom dobio/la veliku sumu novca?" },
+      { group: "Ko je koristio/la seks kao oruzje ili nagradu u vezi?", hotseat: "Jesi li ikad koristio/la seks kao nagradu ili uskracivao/la ga kao kaznu? Ispricaj!" },
+      { group: "Ko se najvjerovatnije nikad nije potpuno otvorio/la ni jednom partneru?", hotseat: "Postoji li nesto sto nisi nikad rekao/la nijednom partneru? Sta je to, uopsteno?" },
+      { group: "Ko je najvjerovatnije da je platio/la za seks ili primio/la novac za seks?", hotseat: "Jesi li ikad bio/la u situaciji gdje je novac eksplicitno ili implicitno bio dio seksualne situacije?" },
+      { group: "Ko bi najvjerovatnije ostavio/la sve i pobjegao/la s nekim strancem?", hotseat: "Da li bi ikad mogao/la ostaviti sve i otputovati sa nekim koga jedva poznajesvjero?" },
+      { group: "Ko se ponasa najdrugacije kada je sam/a nego u drustvu?", hotseat: "Koliko si drugaciji/a kada si sam/a u odnosu na to kako se predstavljas u drustvu? Sta krijes?" },
+      { group: "Ko je najvjerovatnije da je namjerno unistio/la neciju vezu?", hotseat: "Jesi li ikad svjesno uradio/la nesto da unistis vezu nekoga drugog? Zasto?" },
+      { group: "Ko je imao/la seks samo da ne bi bio/la sam/a?", hotseat: "Jesi li ikad imao/la seks sa nekim samo zato sto si se osjecao/la usamljeno, a ne jer si to zaista htio/la?" },
+      { group: "Ko je imao/la seks sa nekim od prisutnih ovdje, a niko ne zna?", hotseat: "Da li si ikad imao/la seks sa nekim u ovoj sobi ili bliskom krugu, a to je ostalo tajna? Ispricaj!" },
+      { group: "Ko bi pristao/la da bude necija tajna veza i nikad ne bude predstavljen/a javno?", hotseat: "Da li bi pristao/la da si necija skrivena veza, bez javnog statusa, bez zajednickih izlazaka? Za koliko dugo?" },
+      { group: "Ko je bio/la toliko privucen/a nekim da je uradio/la nesto ponizavajuce da ga/je dobije?", hotseat: "Jesi li ikad bio/la toliko privucen/a nekim da si uradio/la nesto sramotno da ga/je dobijas?" },
+      { group: "Ko bi najvjerovatnije ostao/la tih o zlocinu prijatelja da ga/je zastitio/la?", hotseat: "Da li bi pokrio/la prijatelja koji je pocinio ozbiljan zlocin? Gdje ti je granica?" },
+      { group: "Ko bi najvjerovatnije lazirao/la trudnocu ili bolest da zadrzao/la partnera?", hotseat: "Da li bi lazirao/la trudnocu ili ozbiljnu bolest da zadrzis partnera? Jesi li ikad uradio/la nesto slicno?" },
+    ];
+
+    const QUESTIONS_EN = [
+      { group: "Who would cheat on their partner if they knew they would never get caught?", hotseat: "Would you cheat on your partner if you knew you would never get caught? Be honest!" },
+      { group: "Who has already cheated and never told anyone?", hotseat: "Have you ever cheated on someone and never told a soul? Tell us!" },
+      { group: "Who has the highest body count in the room?", hotseat: "What is your actual body count? Be honest!" },
+      { group: "Who has stolen something valuable and never felt guilty?", hotseat: "Have you ever stolen something valuable? Do you regret it?" },
+      { group: "Who would sell a close friend's intimate secret for a large sum?", hotseat: "Would you sell a friend's intimate secret for money? Whose would be easiest to sell?" },
+      { group: "Who has lied to their partner about where they were?", hotseat: "Have you lied to a partner about where you were? What were you actually doing?" },
+      { group: "Who has had sex while someone else was in the same apartment?", hotseat: "Have you had sex while someone else was in the same apartment or house? Details!" },
+      { group: "Who would be quickest to cheat their company on expenses?", hotseat: "Would you cheat your company on expenses? Have you ever done it?" },
+      { group: "Who is most likely to have a secret dating app profile?", hotseat: "Have you ever had a secret dating profile while in a relationship?" },
+      { group: "Who would sleep with their boss for a promotion?", hotseat: "Would you sleep with your boss for a promotion? Where is your line?" },
+      { group: "Who has woken up next to someone whose name they did not know?", hotseat: "Have you woken up next to someone whose name you did not know? Tell us!" },
+      { group: "Who has sent explicit messages to someone who was not their partner?", hotseat: "Have you ever sent explicit messages to someone who was not your partner? To who?" },
+      { group: "Who would steal money from a friend if they knew they would never get caught?", hotseat: "Would you steal money from a friend if you knew you would never get caught?" },
+      { group: "Who has faked an orgasm?", hotseat: "Have you ever faked an orgasm? With who and why?" },
+      { group: "Who is most likely to have a secret fetish?", hotseat: "Do you have a secret fetish? What is it?" },
+      { group: "Who has been the third person in someone's relationship?", hotseat: "Have you ever been the third person in someone's relationship, knowingly or not?" },
+      { group: "Who is most likely to watch porn at work?", hotseat: "Have you ever watched porn during work hours?" },
+      { group: "Who has shoplifted and is proud of it?", hotseat: "Have you ever shoplifted? Do you regret it or are you proud?" },
+      { group: "Who would leave their partner for someone rich?", hotseat: "Would you leave your partner for someone significantly richer? How rich?" },
+      { group: "Who has had sex on the first date?", hotseat: "Have you had sex on a first date? Tell us how it went!" },
+      { group: "Who lies about their number of sexual partners?", hotseat: "Do you lie about your body count? What is the real number?" },
+      { group: "Who would sleep with someone in this room for the right offer?", hotseat: "Would you sleep with someone here for the right offer? Who and for how much?" },
+      { group: "Who is most likely to have a double life?", hotseat: "Is there a side of you that almost nobody knows about? What is it?" },
+      { group: "Who would film a sex video without asking their partner?", hotseat: "Would you record sex without asking your partner? Have you ever done it?" },
+      { group: "Who has read someone else's messages without permission?", hotseat: "Have you ever read someone's messages without permission? Whose and what did you find?" },
+      { group: "Who would cheat on an exam or already has?", hotseat: "Have you ever cheated on an exam? How and do you regret it?" },
+      { group: "Who is worst in bed by their own assessment?", hotseat: "What is your biggest weakness in bed? Be honest!" },
+      { group: "Who is most likely to end up in prison and why?", hotseat: "What would you most likely end up in prison for? Be honest!" },
+      { group: "Who has had sex in the strangest place?", hotseat: "What is the strangest place you have had sex? Details required!" },
+      { group: "Who would sleep with someone's partner here if they were single?", hotseat: "Would you sleep with someone's partner in this room if you were single? Whose?" },
+      { group: "Who has been in the most toxic relationship of their life?", hotseat: "What was your most toxic relationship? What did you do in it?" },
+      { group: "Who would accept a sexual proposition from an attractive stranger?", hotseat: "Would you accept a sexual proposition from an attractive stranger for one night? Under what conditions?" },
+      { group: "Who has had sex with someone with a big age gap?", hotseat: "Have you had sex with someone with a significant age difference? How big was the gap?" },
+      { group: "Who is most likely to have tried something illegal?", hotseat: "Have you ever tried something illegal? What was it and how did it go?" },
+      { group: "Who has sent an intimate photo to someone who did not ask for it?", hotseat: "Have you ever sent an intimate photo to someone who did not ask for it? Tell us!" },
+      { group: "Who would cheat in a marriage if the perfect opportunity came up?", hotseat: "Would you cheat in a marriage if you knew you would never get caught?" },
+      { group: "Who has lied to their partner about something serious for the longest time?", hotseat: "What is the biggest and longest lie you have told a partner? How long did it last?" },
+      { group: "Who would accept money from a wealthy lover and stay in that arrangement?", hotseat: "Would you accept financial support from a wealthy lover and stay in that kind of relationship?" },
+      { group: "Who has had sexual fantasies about someone in this room?", hotseat: "Have you ever had sexual fantasies about someone here? About who?" },
+      { group: "Who has been in a sexual situation with more than one person?", hotseat: "Have you ever been in a sexual situation with more than one person? Tell us!" },
+      { group: "Who would convince their partner to do something they do not want in bed?", hotseat: "Have you ever persuaded a partner to do something sexual they did not want to do? How?" },
+      { group: "Who is most likely to have stalked an ex on social media?", hotseat: "Have you ever stalked an ex on social media? How far did you go?" },
+      { group: "Who would sleep with a celebrity just for the status?", hotseat: "Would you sleep with a celebrity just because they are famous? Who would be easiest?" },
+      { group: "Who has had sex in a public place?", hotseat: "Have you ever had sex in a public place where someone could see you? Where and how?" },
+      { group: "Who would use compromising material against an ex?", hotseat: "Would you use compromising material about an ex to get something from them? What would you want?" },
+      { group: "Who has lied about their job or income to impress someone?", hotseat: "Have you ever lied about your job or income to impress someone? Who and how?" },
+      { group: "Who would leave everything behind for perfect sexual chemistry?", hotseat: "Would you leave your job, city and relationship for someone with perfect chemistry but nothing else in common?" },
+      { group: "Who is most ashamed of something they did while drunk?", hotseat: "What are you most ashamed of from something you did while drunk? Tell us!" },
+      { group: "Who hides how much money they actually spend?", hotseat: "Do you hide from your partner or family how much you actually spend? On what?" },
+      { group: "Who has been the worst in bed and knew it?", hotseat: "Can you remember a sexual experience that was a complete disaster? Tell us!" },
+      { group: "Who would agree to be a paid companion for a wealthy person on a trip?", hotseat: "Would you agree to be a paid companion for a wealthy person on a luxury trip? What would that include?" },
+      { group: "Who is most likely to have had sex with a coworker?", hotseat: "Have you ever had sex or a romantic situation with a coworker? Tell us!" },
+      { group: "Who would agree to an open relationship if their partner demanded it?", hotseat: "Would you agree to an open relationship if your partner demanded it, or would you leave?" },
+      { group: "Who would leave their partner by text if they knew they could get away with it?", hotseat: "Would you break up with a partner by text if you knew there would be no consequences?" },
+      { group: "Who is most complex about their past?", hotseat: "What from your past embarrasses or haunts you the most today?" },
+      { group: "Who would post explicit content online for money?", hotseat: "Would you ever post explicit content online for money? Under what conditions?" },
+      { group: "Who is most likely to have secretly recorded a conversation?", hotseat: "Have you ever secretly recorded a conversation with a friend or partner? Why?" },
+      { group: "Who has been most obsessed with someone who did not love them back?", hotseat: "Have you ever been obsessed with someone who did not return your feelings? What did you do?" },
+      { group: "Who has had sex under the influence and regretted it?", hotseat: "Have you had sex under the influence of alcohol or drugs and regretted it? Tell us!" },
+      { group: "Who is most likely to have created a fake social media profile?", hotseat: "Have you ever created a fake profile on social media? Why and what did you do with it?" },
+      { group: "Who would pretend to enjoy something in bed they do not like?", hotseat: "Have you ever pretended to enjoy something in bed that you did not? What was it?" },
+      { group: "Who would betray a friend for a major career opportunity?", hotseat: "Would you use or betray a friend if it meant a massive career leap?" },
+      { group: "Who is most likely to have faked illness to avoid an obligation?", hotseat: "Have you ever faked illness or an emergency to avoid something? What and why?" },
+      { group: "Who would sign an NDA to cover up a wealthy partner's scandal?", hotseat: "Would you sign an NDA to cover up a wealthy partner's scandal for a large sum?" },
+      { group: "Who is most likely to have had sex in a car?", hotseat: "Have you ever had sex in a car? Where and how did it go?" },
+      { group: "Who would cut off a friendship fastest for enough money?", hotseat: "How much money would it take for you to cut off a long-term friendship with no explanation?" },
+      { group: "Who would have a baby without their partner's consent?", hotseat: "Would you ever sabotage contraception without your partner's knowledge? Be honest!" },
+      { group: "Who is most likely to have read someone's diary or private notes?", hotseat: "Have you ever read someone's diary or private notes? Whose and what did you find?" },
+      { group: "Who would marry for money without love?", hotseat: "Would you marry for financial interest without real love? For how much?" },
+      { group: "Who is most likely to have faked an orgasm more than ten times?", hotseat: "How many times have you roughly faked an orgasm? With the same person or different people?" },
+      { group: "Who would most likely agree to a partner swap?", hotseat: "Would you agree to swap partners with a close couple? Under what conditions?" },
+      { group: "Who is most likely to have lied to a therapist or doctor?", hotseat: "Have you ever lied to a therapist or doctor about something important? What and why?" },
+      { group: "Who is most likely to have stolen someone's partner from a friend?", hotseat: "Have you ever been interested in a close friend's partner and acted on it?" },
+      { group: "Who would most likely accept sex in exchange for a luxury gift?", hotseat: "Would you agree to a sexual situation in exchange for an expensive gift or trip?" },
+      { group: "Who would agree to be a sugar mama or daddy?", hotseat: "Would you financially support a younger person in exchange for their company and intimacy?" },
+      { group: "Who is most likely to have had a romance with a married person?", hotseat: "Have you ever been in a romantic or sexual situation with someone who was married? Tell us!" },
+      { group: "Who would most likely leave their partner after receiving an inheritance?", hotseat: "Would you change partners if you suddenly came into a lot of money?" },
+      { group: "Who has used sex as a weapon or reward in a relationship?", hotseat: "Have you ever used sex as a reward or withheld it as punishment? Tell us!" },
+      { group: "Who has never fully opened up to any partner?", hotseat: "Is there something you have never told any partner? What is it, generally speaking?" },
+      { group: "Who is most likely to have paid for sex or received money for sex?", hotseat: "Have you ever been in a situation where money was explicitly or implicitly part of a sexual situation?" },
+      { group: "Who would most likely leave everything and run away with a stranger?", hotseat: "Could you leave everything and travel with someone you barely know? What would drive you to it?" },
+      { group: "Who behaves most differently when alone versus in company?", hotseat: "How different are you when alone versus how you present yourself in public? What do you hide?" },
+      { group: "Who is most likely to have intentionally destroyed someone's relationship?", hotseat: "Have you ever deliberately done something to destroy someone else's relationship? Why?" },
+      { group: "Who has had sex just to not be alone?", hotseat: "Have you ever had sex with someone purely because you felt lonely and not because you actually wanted them?" },
+      { group: "Who has had sex with someone present here and nobody knows?", hotseat: "Have you ever had sex with someone in this room or close circle and it stayed a secret? Tell us!" },
+      { group: "Who would agree to be someone's secret relationship never introduced publicly?", hotseat: "Would you agree to be someone's hidden relationship with no public status and no going out together? For how long?" },
+      { group: "Who has been so attracted to someone they did something embarrassing to get them?", hotseat: "Have you ever been so attracted to someone that you did something humiliating or shameful to get them?" },
+      { group: "Who would most likely stay silent about a friend's crime to protect them?", hotseat: "Would you cover for a friend who committed a serious crime? What is your limit?" },
+      { group: "Who would most likely fake a pregnancy or health scare to keep a partner?", hotseat: "Would you fake a pregnancy or serious health issue to keep a partner from leaving? Have you ever done something similar?" },
+    ];
+
+    function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+    const TOTAL_ROUNDS = 10;
+
+    const STRINGS = {
+      bs: {
+        tagline: "Socijalna igra bodovanja",
+        subtitle: "rundi - Vruca stolica - Ko je iskreniji?",
+        start: "POCNI",
+        rulesBtn: "Kako se igra?",
+        howManyPlayers: "Koliko igraca?",
+        playersRange: "2 do 20 igraca",
+        next: "DALJE",
+        whoPlays: "Ko igra?",
+        playerLabel: "Igrac",
+        letsPlay: "IGRAJMO",
+        round: "RUNDA",
+        mostLikelyLabel: "Ko je najvjerovatnije...",
+        voting: "GLASANJE",
+        passPhone: "Predaj telefon",
+        passReady: "SPREMAN/NA",
+        passOnly: "Neka samo",
+        passOnlySuffix: "gleda!",
+        youVote: "Glasas ti,",
+        votesOf: "glasova",
+        voteResult: "Rezultat glasanja",
+        tieNote: "Nerijeseno, ide prvi po listi",
+        hotseat: "Vruca stolica",
+        yourQuestion: "Tvoje pitanje",
+        groupVotedFor: "ide na vrucu stolicu!",
+        hotseatBtn: "VRUCA STOLICA",
+        honestyVoting: "Je li bio/la iskren/a?",
+        questionWas: "Pitanje je bilo",
+        wasHonest: "Je li",
+        wasHonestSuffix: "odgovorio/la iskreno?",
+        yes: "Iskren/a",
+        no: "Nije",
+        verdict: "Presuda grupe",
+        earnedPoint: "+1 BOD, iskren/a odgovor!",
+        noPoint: "0 BODOVA, nije ubjedljivo!",
+        honestyBtn: "GLASANJE O ISKRENOSTI",
+        leaderboardBtn: "VIDI REZULTATE RUNDE",
+        leaderboardTitle: "Tabela",
+        leaderboardScored: "bod ovaj krug!",
+        leaderboardNext: "SLJEDECA RUNDA",
+        leaderboardFinal: "FINALE",
+        finalResults: "Krajnji rezultati",
+        winnerSuffix: "Pobjednik/ca sa",
+        winnerPoints: "bodova!",
+        playAgain: "IGRAJ PONOVO",
+        earnedHint: "Odgovori glasno. Ako grupa smatra da si iskren/a,",
+        earnedHintBonus: "+1 bod!",
+        perkDeflect: "Deflect",
+        perkPass: "Pass",
+        perkSpotlight: "Spotlight",
+        perkUsed: "Iskoristeno",
+        perkOnce: "1x",
+        deflectPick: "Koga deflektujes?",
+        spotlightPick: "Koga stavijas u Spotlight?",
+        spotlightAnswers: "mora odgovoriti na isto pitanje!",
+        rulesTitle: "Pravila igre",
+        rulesFlow: "Tok igre",
+        rulesPerks: "Perks, jednom po igri",
+        rulesTips: "Savjeti",
+        rulesSteps: [
+          { n: "1", t: "Pitanje za grupu se prikazuje svima. Razmislite ko je najvjerovatnije to sto pitanje trazi." },
+          { n: "2", t: "Glasanje. Telefon ide u krug, svako tajno glasa koga salje na vrucu stolicu." },
+          { n: "3", t: "Vruca stolica. Ko dobije najvise glasova, dobija personalizovano pitanje i mora odgovoriti naglas." },
+          { n: "4", t: "Glasanje o iskrenosti. Telefon ponovo u krug. Svi glasaju je li odgovor bio iskren." },
+          { n: "5", t: "Bodovanje. Vecina glasova daje +1 bod. Nerijeseno ide u korist igraca. Nakon 10 rundi pobijedi ko ima najvise." },
+        ],
+        rulesTipsList: [
+          "Sto si iskreniji/a, vise bodova. Laze se teze nego sto mislis!",
+          "Perks su strateski, sacuvaj Deflect za najgore pitanje.",
+          "Spotlight moze dati bod i tebi i osobi koju si odabrao/la.",
+          "Pass je siguran izlaz, ali bez boda i bez objasnjenja.",
+        ],
+      },
+      en: {
+        tagline: "Social scoring game",
+        subtitle: "rounds - Hot Seat - Who is most honest?",
+        start: "START",
+        rulesBtn: "How to play?",
+        howManyPlayers: "How many players?",
+        playersRange: "2 to 20 players",
+        next: "NEXT",
+        whoPlays: "Who is playing?",
+        playerLabel: "Player",
+        letsPlay: "LETS PLAY",
+        round: "ROUND",
+        mostLikelyLabel: "Who is most likely to...",
+        voting: "VOTE",
+        passPhone: "Pass the phone",
+        passReady: "READY",
+        passOnly: "Only let",
+        passOnlySuffix: "look at the screen!",
+        youVote: "Your vote,",
+        votesOf: "votes",
+        voteResult: "Voting results",
+        tieNote: "Tie, first on the list goes",
+        hotseat: "Hot Seat",
+        yourQuestion: "Your question",
+        groupVotedFor: "goes to the hot seat!",
+        hotseatBtn: "HOT SEAT",
+        honestyVoting: "Were they honest?",
+        questionWas: "The question was",
+        wasHonest: "Was",
+        wasHonestSuffix: "honest in their answer?",
+        yes: "Honest",
+        no: "Not really",
+        verdict: "Group verdict",
+        earnedPoint: "+1 POINT, honest answer!",
+        noPoint: "0 POINTS, not convincing!",
+        honestyBtn: "HONESTY VOTE",
+        leaderboardBtn: "SEE ROUND RESULTS",
+        leaderboardTitle: "Leaderboard",
+        leaderboardScored: "point this round!",
+        leaderboardNext: "NEXT ROUND",
+        leaderboardFinal: "FINAL RESULTS",
+        finalResults: "Final Results",
+        winnerSuffix: "Winner with",
+        winnerPoints: "points!",
+        playAgain: "PLAY AGAIN",
+        earnedHint: "Answer out loud. If the group thinks you are honest,",
+        earnedHintBonus: "+1 point!",
+        perkDeflect: "Deflect",
+        perkPass: "Pass",
+        perkSpotlight: "Spotlight",
+        perkUsed: "Used",
+        perkOnce: "1x",
+        deflectPick: "Who do you deflect to?",
+        spotlightPick: "Who do you put in the Spotlight?",
+        spotlightAnswers: "must also answer the same question!",
+        rulesTitle: "Rulebook",
+        rulesFlow: "Game flow",
+        rulesPerks: "Perks, once per game",
+        rulesTips: "Tips",
+        rulesSteps: [
+          { n: "1", t: "A group question is shown to everyone. Think about who is most likely to fit the question." },
+          { n: "2", t: "Vote. The phone passes around and each person secretly votes who goes to the hot seat." },
+          { n: "3", t: "Hot seat. The person with the most votes gets a personalised question and must answer out loud." },
+          { n: "4", t: "Honesty vote. Phone goes around again. Everyone votes on whether the answer was honest." },
+          { n: "5", t: "Scoring. Majority vote gives +1 point. Ties go in the player's favour. After 10 rounds, highest score wins." },
+        ],
+        rulesTipsList: [
+          "The more honest you are, the more points you earn. Lying is harder than you think!",
+          "Perks are strategic. Save Deflect for your worst question.",
+          "Spotlight can earn a point for you AND the person you pick.",
+          "Pass is a safe exit, but zero points and no explanation allowed.",
+        ],
+      },
+    };
+
+    const css = `
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body { background: #080810; color: #EDEBE4; font-family: 'Instrument Sans', sans-serif; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+      .app { min-height: 100vh; position: relative; overflow: hidden; }
+      .glow { position: fixed; border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: 0; }
+      .screen { position: relative; z-index: 1; min-height: 100vh; min-height: -webkit-fill-available; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 28px 20px; padding-top: max(28px, env(safe-area-inset-top)); padding-bottom: max(28px, env(safe-area-inset-bottom)); gap: 14px; }
+      .wordmark { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(50px,12vw,88px); line-height: 0.88; letter-spacing: -2px; text-align: center; text-transform: uppercase; }
+      .wordmark em { font-style: normal; color: #FF3B3B; }
+      .eyebrow { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: #555; text-align: center; }
+      .card { width: 100%; max-width: 420px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 18px; padding: 24px; }
+      .input-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+      .idx { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; color: #FF3B3B; width: 20px; flex-shrink: 0; text-align: right; }
+      input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09); border-radius: 10px; padding: 12px 14px; color: #EDEBE4; font-family: 'Instrument Sans', sans-serif; font-size: 16px; outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
+      input:focus { border-color: #FF3B3B; }
+      input::placeholder { color: #444; }
+      .btn { width: 100%; max-width: 420px; background: #FF3B3B; color: #fff; border: none; border-radius: 14px; padding: 17px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+      .btn:active { opacity: 0.85; transform: scale(0.98); }
+      .btn:disabled { background: #1e1e1e; color: #444; cursor: default; transform: none; opacity: 1; }
+      .q-box { width: 100%; max-width: 420px; background: rgba(255,59,59,0.07); border: 1px solid rgba(255,59,59,0.2); border-radius: 20px; padding: 24px; text-align: center; }
+      .q-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #FF3B3B; margin-bottom: 12px; }
+      .q-text { font-family: 'Syne', sans-serif; font-size: clamp(15px,4vw,20px); font-weight: 700; line-height: 1.4; }
+      .q-box.hs { background: rgba(255,180,0,0.06); border-color: rgba(255,180,0,0.2); }
+      .q-box.hs .q-label { color: #FFB400; }
+      .q-box.hs .q-text { color: #FFE088; }
+      .q-box.sp { background: rgba(0,201,167,0.06); border-color: rgba(0,201,167,0.2); }
+      .q-box.sp .q-label { color: #00C9A7; }
+      .player-list { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 8px; }
+      .player-item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; cursor: pointer; transition: all 0.18s; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+      .player-item:active { border-color: rgba(255,59,59,0.4); background: rgba(255,59,59,0.07); }
+      .avatar { width: 36px; height: 36px; border-radius: 50%; background: #1e1e28; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 16px; color: #FF3B3B; flex-shrink: 0; }
+      .p-name { font-weight: 600; font-size: 15px; flex: 1; }
+      .result-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 14px; width: 100%; max-width: 420px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); }
+      .result-row.top { background: rgba(255,59,59,0.1); border-color: rgba(255,59,59,0.35); }
+      .result-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 24px; color: #FF3B3B; }
+      .hs-name { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(36px,9vw,60px); color: #FF3B3B; text-align: center; line-height: 1; letter-spacing: -1px; }
+      .vote-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 420px; }
+      .hbtn { border: none; border-radius: 16px; padding: 20px 12px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.18s; display: flex; flex-direction: column; align-items: center; gap: 8px; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+      .hbtn.yes { background: rgba(52,199,89,0.1); border: 1px solid rgba(52,199,89,0.25); color: #34C759; }
+      .hbtn.yes:active { background: rgba(52,199,89,0.25); }
+      .hbtn.no { background: rgba(255,59,59,0.08); border: 1px solid rgba(255,59,59,0.2); color: #FF3B3B; }
+      .hbtn.no:active { background: rgba(255,59,59,0.2); }
+      .tally { display: flex; gap: 16px; justify-content: center; }
+      .tblock { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+      .tnum { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 40px; }
+      .tlbl { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #555; display: flex; align-items: center; gap: 4px; }
+      .banner { width: 100%; max-width: 420px; border-radius: 14px; padding: 16px 20px; text-align: center; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 10px; }
+      .banner.pt { background: rgba(52,199,89,0.1); border: 1px solid rgba(52,199,89,0.25); color: #34C759; }
+      .banner.nopt { background: rgba(255,59,59,0.08); border: 1px solid rgba(255,59,59,0.2); color: #FF3B3B; }
+      .prog-wrap { width: 100%; max-width: 420px; }
+      .prog-label { display: flex; justify-content: space-between; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #444; margin-bottom: 6px; }
+      .prog-track { height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+      .prog-fill { height: 100%; background: #FF3B3B; transition: width 0.4s ease; }
+      .mini-score { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 4px; }
+      .mini-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 10px; background: rgba(255,255,255,0.03); }
+      .perk-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; width: 100%; max-width: 420px; }
+      .perk-card { border-radius: 12px; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; transition: all 0.18s; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04); -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+      .perk-card:active:not(.used) { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); transform: scale(0.97); }
+      .perk-card.used { opacity: 0.25; cursor: default; }
+      .perk-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+      .perk-once { font-size: 10px; color: #555; }
+      .lb-row { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-radius: 14px; width: 100%; max-width: 420px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); margin-bottom: 8px; }
+      .lb-row.scored { background: rgba(52,199,89,0.08); border-color: rgba(52,199,89,0.3); }
+      .lb-row.first { background: rgba(255,215,0,0.08); border-color: rgba(255,215,0,0.25); }
+      .lb-rank { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 16px; color: #333; width: 22px; text-align: center; }
+      .lb-rank.top { color: #FFD700; }
+      .lb-pts { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px; color: #FF3B3B; margin-left: auto; }
+      .lb-row.first .lb-pts { color: #FFD700; }
+      .lb-badge { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #34C759; font-weight: 600; margin-left: 6px; }
+      .rdots { display: flex; gap: 6px; margin-bottom: 4px; }
+      .rdot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.08); }
+      .rdot.done { background: #FF3B3B; }
+      .rdot.cur { background: rgba(255,59,59,0.4); }
+      .tie-note { background: rgba(255,200,0,0.08); border: 1px solid rgba(255,200,0,0.2); border-radius: 12px; padding: 10px 16px; font-size: 13px; color: #FFD700; max-width: 420px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; }
+      .icon-hero { margin-bottom: 4px; }
+      .score-row { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-radius: 14px; width: 100%; max-width: 420px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); }
+      .score-row.first { background: rgba(255,215,0,0.08); border-color: rgba(255,215,0,0.25); }
+      .srank { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 14px; color: #333; width: 18px; }
+      .spts { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; color: #FF3B3B; margin-left: auto; }
+      .score-row.first .spts { color: #FFD700; }
+      .rules-screen { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; padding: 28px 20px; padding-top: max(28px, env(safe-area-inset-top)); padding-bottom: max(28px, env(safe-area-inset-bottom)); gap: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+      .rsec { width: 100%; max-width: 420px; margin: 0 auto 24px; }
+      .rsec-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: #FF3B3B; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+      .rstep { display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
+      .rnum { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; color: #FF3B3B; width: 24px; flex-shrink: 0; line-height: 1.3; }
+      .rtxt { font-size: 14px; line-height: 1.65; color: #888; flex: 1; }
+      .perk-rule { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-radius: 12px; margin-bottom: 8px; background: rgba(255,255,255,0.03); }
+      .perk-rule-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+      .perk-rule-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; margin-bottom: 2px; }
+      .perk-rule-desc { font-size: 13px; color: #666; line-height: 1.5; }
+      .tip-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 14px 16px; margin-bottom: 8px; font-size: 13px; color: #888; line-height: 1.6; display: flex; gap: 10px; align-items: flex-start; }
+      .rback { display: flex; align-items: center; gap: 8px; background: none; border: none; color: #555; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; padding: 0; margin-bottom: 24px; -webkit-tap-highlight-color: transparent; }
+      .scroll-list { width: 100%; max-width: 420px; overflow-y: auto; max-height: 55vh; -webkit-overflow-scrolling: touch; }
+    `;
+
+    function App() {
+      const [lang, setLang] = useState("bs");
+      const [phase, setPhase] = useState("intro");
+      const [playerCount, setPlayerCount] = useState(6);
+      const [names, setNames] = useState([]);
+      const [players, setPlayers] = useState([]);
+      const [shuffledBS] = useState(() => shuffle(QUESTIONS_BS));
+      const [shuffledEN] = useState(() => shuffle(QUESTIONS_EN));
+      const [qIndex, setQIndex] = useState(0);
+      const [mltVotes, setMltVotes] = useState({});
+      const [mltVoterIdx, setMltVoterIdx] = useState(0);
+      const [isTie, setIsTie] = useState(false);
+      const [hotPlayer, setHotPlayer] = useState(null);
+      const [hvotes, setHvotes] = useState({});
+      const [hVoterIdx, setHVoterIdx] = useState(0);
+      const [nextVoterName, setNextVoterName] = useState("");
+      const [passTarget, setPassTarget] = useState(null);
+      const [spotlightPlayer, setSpotlightPlayer] = useState(null);
+      const [spotlightHvotes, setSpotlightHvotes] = useState({});
+      const [spotlightHVoterIdx, setSpotlightHVoterIdx] = useState(0);
+      const [lastScorers, setLastScorers] = useState([]);
+
+      const s = STRINGS[lang];
+      const questions = lang === "bs" ? shuffledBS : shuffledEN;
+      const active = players;
+      const currentQ = questions[qIndex % questions.length];
+
+      const getTally = (votes) => {
+        const t = {};
+        active.forEach(p => { t[p.id] = 0; });
+        Object.values(votes).forEach(id => { t[id] = (t[id] || 0) + 1; });
+        return [...active].map(p => ({ ...p, count: t[p.id] || 0 })).sort((a, b) => b.count - a.count);
+      };
+
+      const startGame = () => {
+        const valid = names.filter(n => n.trim());
+        setPlayers(valid.map((n, i) => ({ id: i, name: n.trim(), points: 0, perks: { deflect: true, pass: true, spotlight: true } })));
+        setQIndex(0); setMltVotes({}); setMltVoterIdx(0);
+        setHotPlayer(null); setHvotes({}); setHVoterIdx(0);
+        setSpotlightPlayer(null); setSpotlightHvotes({}); setSpotlightHVoterIdx(0);
+        setLastScorers([]);
+        setPhase("game");
+      };
+
+      const castMlt = (targetId) => {
+        const voter = active[mltVoterIdx];
+        const updated = { ...mltVotes, [voter.id]: targetId };
+        setMltVotes(updated);
+        if (mltVoterIdx + 1 >= active.length) {
+          const sorted = getTally(updated);
+          setIsTie(sorted.length > 1 && sorted[0].count === sorted[1].count);
+          setHotPlayer(sorted[0]);
+          setPhase("mlt-result");
+        } else {
+          setNextVoterName(active[mltVoterIdx + 1].name);
+          setPassTarget("mlt-voting");
+          setMltVoterIdx(i => i + 1);
+          setPhase("pass-phone");
+        }
+      };
+
+      const honestyVoters = hotPlayer ? active.filter(p => p.id !== hotPlayer.id) : [];
+      const currentHvoter = honestyVoters[hVoterIdx];
+
+      const castHonesty = (verdict) => {
+        const voter = honestyVoters[hVoterIdx];
+        const updated = { ...hvotes, [voter.id]: verdict };
+        setHvotes(updated);
+        if (hVoterIdx + 1 >= honestyVoters.length) {
+          setPhase("honesty-result");
+        } else {
+          setNextVoterName(honestyVoters[hVoterIdx + 1].name);
+          setPassTarget("honesty-voting");
+          setHVoterIdx(i => i + 1);
+          setPhase("pass-phone");
+        }
+      };
+
+      const yesCount = Object.values(hvotes).filter(v => v === "yes").length;
+      const noCount = Object.values(hvotes).filter(v => v === "no").length;
+      const earnedPoint = yesCount >= noCount;
+
+      const spotlightVoters = spotlightPlayer ? active.filter(p => p.id !== spotlightPlayer.id) : [];
+      const currentSpotlightVoter = spotlightVoters[spotlightHVoterIdx];
+      const spYes = Object.values(spotlightHvotes).filter(v => v === "yes").length;
+      const spNo = Object.values(spotlightHvotes).filter(v => v === "no").length;
+      const spEarned = spYes >= spNo;
+
+      const castSpotlightHonesty = (verdict) => {
+        const voter = spotlightVoters[spotlightHVoterIdx];
+        const updated = { ...spotlightHvotes, [voter.id]: verdict };
+        setSpotlightHvotes(updated);
+        if (spotlightHVoterIdx + 1 >= spotlightVoters.length) {
+          setPhase("spotlight-result");
+        } else {
+          setNextVoterName(spotlightVoters[spotlightHVoterIdx + 1].name);
+          setPassTarget("spotlight-hvoting");
+          setSpotlightHVoterIdx(i => i + 1);
+          setPhase("pass-phone");
+        }
+      };
+
+      const hsPerks = players.find(p => p.id === hotPlayer?.id)?.perks || {};
+      const usePerk = (playerId, perkName) => {
+        setPlayers(prev => prev.map(p => p.id === playerId ? { ...p, perks: { ...p.perks, [perkName]: false } } : p));
+      };
+
+      const showLeaderboard = (extraPoints = {}) => {
+        let updated = players;
+        const scorers = [];
+        if (earnedPoint && hotPlayer) {
+          updated = updated.map(p => p.id === hotPlayer.id ? { ...p, points: p.points + 1 } : p);
+          scorers.push(hotPlayer.id);
+        }
+        if (extraPoints.spotlightId && extraPoints.spEarned) {
+          updated = updated.map(p => p.id === extraPoints.spotlightId ? { ...p, points: p.points + 1 } : p);
+          scorers.push(extraPoints.spotlightId);
+        }
+        setPlayers(updated);
+        setLastScorers(scorers);
+        setPhase("round-leaderboard");
+      };
+
+      const advanceRound = () => {
+        const nextQ = qIndex + 1;
+        if (nextQ >= TOTAL_ROUNDS) { setPhase("scoreboard"); return; }
+        setQIndex(nextQ);
+        setMltVotes({}); setMltVoterIdx(0);
+        setHotPlayer(null); setHvotes({}); setHVoterIdx(0);
+        setSpotlightPlayer(null); setSpotlightHvotes({}); setSpotlightHVoterIdx(0);
+        setLastScorers([]);
+        setPhase("game");
+      };
+
+      const sorted = [...players].sort((a, b) => b.points - a.points);
+
+      const PERKS_DEF = [
+        { key: "deflect", icon: <Shuffle size={20} />, color: "#7B61FF", label: s.perkDeflect },
+        { key: "pass", icon: <Ban size={20} />, color: "#FF6B35", label: s.perkPass },
+        { key: "spotlight", icon: <Users size={20} />, color: "#00C9A7", label: s.perkSpotlight },
+      ];
+
+      return (
+        <div className="app">
+          <style>{css}</style>
+          <div className="glow" style={{ width: 500, height: 500, background: "#FF3B3B", top: -200, right: -150, opacity: 0.08 }} />
+          <div className="glow" style={{ width: 400, height: 400, background: "#7B2FFF", bottom: -150, left: -100, opacity: 0.07 }} />
+
+          {phase === "intro" && (
+            <div className="screen">
+              <p className="eyebrow">{s.tagline}</p>
+              <div className="wordmark">SURVIVOR<br /><em>VECERA</em></div>
+              <p style={{ color: "#444", fontSize: 13, textAlign: "center", maxWidth: 300, lineHeight: 1.7 }}>{TOTAL_ROUNDS} {s.subtitle}</p>
+              <div style={{ display: "flex", gap: 10, width: "100%", maxWidth: 420 }}>
+                {["bs", "en"].map(l => (
+                  <button key={l} onClick={() => setLang(l)} style={{ flex: 1, padding: "12px 0", borderRadius: 12, cursor: "pointer", fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 14, letterSpacing: 1, textTransform: "uppercase", transition: "all 0.15s", background: lang === l ? "#FF3B3B" : "rgba(255,255,255,0.05)", border: lang === l ? "none" : "1px solid rgba(255,255,255,0.1)", color: lang === l ? "#fff" : "#666", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, WebkitTapHighlightColor: "transparent", touchAction: "manipulation" }}>
+                    <Globe size={13} />{l === "bs" ? "BS" : "EN"}
+                  </button>
+                ))}
+              </div>
+              <button className="btn" onClick={() => setPhase("count")}>{s.start}</button>
+              <button onClick={() => setPhase("rules")} style={{ background: "none", border: "none", color: "#444", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: 2, textTransform: "uppercase", WebkitTapHighlightColor: "transparent", touchAction: "manipulation" }}>
+                <BookOpen size={13} />{s.rulesBtn}
+              </button>
+            </div>
+          )}
+
+          {phase === "rules" && (
+            <div className="rules-screen">
+              <div style={{ width: "100%", maxWidth: 420, margin: "0 auto" }}>
+                <button className="rback" onClick={() => setPhase("intro")}><ArrowLeft size={13} /> Back</button>
+                <p className="eyebrow" style={{ marginBottom: 8 }}>{s.rulesTitle}</p>
+                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 34, lineHeight: 1, marginBottom: 24 }}>SURVIVOR<span style={{ color: "#FF3B3B" }}> VECERA</span></div>
+              </div>
+              <div className="rsec">
+                <p className="rsec-title"><ChevronRight size={12} />{s.rulesFlow}</p>
+                {s.rulesSteps.map(step => (
+                  <div key={step.n} className="rstep">
+                    <span className="rnum">{step.n}</span>
+                    <span className="rtxt">{step.t}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="rsec">
+                <p className="rsec-title"><ChevronRight size={12} />{s.rulesPerks}</p>
+                {[
+                  { icon: <Shuffle size={18} color="#7B61FF" />, bg: "rgba(123,97,255,0.12)", name: s.perkDeflect, color: "#7B61FF", desc: lang === "bs" ? "Prebaci pitanje na drugu osobu. Oni idu na vrucu stolicu umjesto tebe." : "Redirect the hot seat to someone else. They answer instead of you." },
+                  { icon: <Ban size={18} color="#FF6B35" />, bg: "rgba(255,107,53,0.12)", name: s.perkPass, color: "#FF6B35", desc: lang === "bs" ? "Odbij da odgovoris bez ikakvog objasnjenja. Automatski 0 bodova." : "Refuse to answer with no explanation. You get 0 points for the round." },
+                  { icon: <Users size={18} color="#00C9A7" />, bg: "rgba(0,201,167,0.12)", name: s.perkSpotlight, color: "#00C9A7", desc: lang === "bs" ? "Odaberi nekoga ko mora odgovoriti na isto pitanje. Mogu zaraditi bod." : "Pick someone who must also answer. They can earn a point too." },
+                ].map(p => (
+                  <div key={p.name} className="perk-rule">
+                    <div className="perk-rule-icon" style={{ background: p.bg }}>{p.icon}</div>
+                    <div>
+                      <div className="perk-rule-name" style={{ color: p.color }}>{p.name} <span style={{ color: "#333", fontWeight: 400 }}>1x</span></div>
+                      <div className="perk-rule-desc">{p.desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="rsec">
+                <p className="rsec-title"><ChevronRight size={12} />{s.rulesTips}</p>
+                {s.rulesTipsList.map((tip, i) => (
+                  <div key={i} className="tip-box">
+                    <span style={{ color: "#FF3B3B", fontWeight: 700, flexShrink: 0 }}>{i + 1}</span>
+                    <span>{tip}</span>
+                  </div>
+                ))}
+              </div>
+              <div style={{ width: "100%", maxWidth: 420, margin: "0 auto 32px" }}>
+                <button className="btn" onClick={() => setPhase("intro")}>{s.start}</button>
+              </div>
+            </div>
+          )}
+
+          {phase === "count" && (
+            <div className="screen">
+              <p className="eyebrow">{s.howManyPlayers}</p>
+              <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                <button onClick={() => setPlayerCount(c => Math.max(2, c - 1))} style={{ width: 56, height: 56, borderRadius: 14, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#EDEBE4", fontSize: 28, cursor: "pointer", WebkitTapHighlightColor: "transparent", touchAction: "manipulation" }}>-</button>
+                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 72, lineHeight: 1, color: "#FF3B3B", minWidth: 80, textAlign: "center" }}>{playerCount}</div>
+                <button onClick={() => setPlayerCount(c => Math.min(20, c + 1))} style={{ width: 56, height: 56, borderRadius: 14, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "#EDEBE4", fontSize: 28, cursor: "pointer", WebkitTapHighlightColor: "transparent", touchAction: "manipulation" }}>+</button>
+              </div>
+              <p style={{ color: "#444", fontSize: 13 }}>{s.playersRange}</p>
+              <button className="btn" onClick={() => { setNames(Array(playerCount).fill("")); setPhase("names"); }}>{s.next}</button>
+            </div>
+          )}
+
+          {phase === "names" && (
+            <div className="screen">
+              <p className="eyebrow">{s.whoPlays}</p>
+              <div className="card scroll-list">
+                {names.map((n, i) => (
+                  <div className="input-row" key={i}>
+                    <span className="idx">{i + 1}</span>
+                    <input
+                      placeholder={`${s.playerLabel} ${i + 1}`}
+                      value={n}
+                      onChange={e => { const c = [...names]; c[i] = e.target.value; setNames(c); }}
+                      autoComplete="off"
+                      autoCorrect="off"
+                      autoCapitalize="words"
+                      spellCheck="false"
+                    />
+                  </div>
+                ))}
+              </div>
+              <button className="btn" disabled={names.filter(n => n.trim()).length < 2} onClick={startGame}>{s.letsPlay}</button>
+            </div>
+          )}
+
+          {phase === "game" && (
+            <div className="screen">
+              <div className="prog-wrap">
+                <div className="prog-label"><span>{s.round}</span><span>{qIndex + 1} / {TOTAL_ROUNDS}</span></div>
+                <div className="prog-track"><div className="prog-fill" style={{ width: `${(qIndex / TOTAL_ROUNDS) * 100}%` }} /></div>
+              </div>
+              <div className="q-box">
+                <p className="q-label">{s.mostLikelyLabel}</p>
+                <p className="q-text">{currentQ.group}</p>
+              </div>
+              <div className="mini-score">
+                {[...players].sort((a, b) => b.points - a.points).map((p, i) => (
+                  <div key={p.id} className="mini-row">
+                    <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 13, color: i === 0 && p.points > 0 ? "#FFD700" : "#333", width: 16 }}>{i + 1}</span>
+                    <span style={{ flex: 1, fontSize: 14 }}>{p.name}</span>
+                    <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 16, color: "#FF3B3B" }}>{p.points}pt</span>
+                  </div>
+                ))}
+              </div>
+              <button className="btn" onClick={() => { setMltVotes({}); setMltVoterIdx(0); setNextVoterName(active[0]?.name); setPassTarget("mlt-voting"); setPhase("pass-phone"); }}>{s.voting}</button>
+            </div>
+          )}
+
+          {phase === "pass-phone" && (
+            <div className="screen">
+              <Smartphone size={52} color="#FF3B3B" strokeWidth={1.5} />
+              <p className="eyebrow" style={{ marginBottom: 8 }}>{s.passPhone}</p>
+              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: "clamp(36px,9vw,60px)", textAlign: "center", lineHeight: 1, letterSpacing: -1 }}>{nextVoterName}</div>
+              <p style={{ color: "#2a2a2a", fontSize: 13, textAlign: "center" }}>{s.passOnly} {nextVoterName} {s.passOnlySuffix}</p>
+              <button className="btn" onClick={() => setPhase(passTarget)}>{s.passReady}</button>
+            </div>
+          )}
+
+          {phase === "mlt-voting" && (
+            <div className="screen">
+              <p className="eyebrow">{s.mostLikelyLabel}</p>
+              <div className="q-box"><p className="q-text">{currentQ.group}</p></div>
+              <p style={{ color: "#555", fontSize: 13, textAlign: "center" }}>{s.youVote} <strong style={{ color: "#EDEBE4" }}>{active[mltVoterIdx]?.name}</strong></p>
+              <div className="player-list">
+                {active.filter(p => p.id !== active[mltVoterIdx]?.id).map(p => (
+                  <div key={p.id} className="player-item" onClick={() => castMlt(p.id)}>
+                    <div className="avatar">{p.name[0]}</div>
+                    <span className="p-name">{p.name}</span>
+                    <ChevronRight size={18} color="#333" />
+                  </div>
+                ))}
+              </div>
+              <p style={{ color: "#2a2a2a", fontSize: 12 }}>{mltVoterIdx + 1} / {active.length} {s.votesOf}</p>
+            </div>
+          )}
+
+          {phase === "mlt-result" && hotPlayer && (
+            <div className="screen">
+              <p className="eyebrow">{s.voteResult}</p>
+              {isTie && <div className="tie-note"><Scale size={14} />{s.tieNote}</div>}
+              {getTally(mltVotes).map((p, i) => (
+                <div key={p.id} className={`result-row${i === 0 ? " top" : ""}`}>
+                  {i === 0 && <Flame size={18} color="#FF3B3B" />}
+                  <div className="avatar" style={i === 0 ? { background: "#FF3B3B", color: "#fff" } : {}}>{p.name[0]}</div>
+                  <span className="p-name">{p.name}</span>
+                  <span className="result-num">{p.count}</span>
+                </div>
+              ))}
+              <p style={{ color: "#555", fontSize: 13, textAlign: "center" }}><strong style={{ color: "#FF3B3B" }}>{hotPlayer.name}</strong> {s.groupVotedFor}</p>
+              <button className="btn" onClick={() => setPhase("hotseat-wait")}>{s.hotseatBtn}</button>
+            </div>
+          )}
+
+          {phase === "hotseat-wait" && hotPlayer && (
+            <div className="screen">
+              <div className="icon-hero"><Flame size={52} color="#FF3B3B" strokeWidth={1.5} /></div>
+              <p className="eyebrow" style={{ color: "#FFB400" }}>{s.hotseat}</p>
+              <div className="hs-name">{hotPlayer.name}</div>
+              <div className="q-box hs">
+                <p className="q-label">{s.yourQuestion}</p>
+                <p className="q-text">{currentQ.hotseat}</p>
+              </div>
+              <div className="perk-row">
+                {PERKS_DEF.map(({ key, icon, color, label }) => {
+                  const available = hsPerks[key];
+                  return (
+                    <div key={key} className={`perk-card${available ? "" : " used"}`}
+                      style={{ borderColor: available ? `${color}44` : undefined, color: available ? color : undefined }}
+                      onClick={() => {
+                        if (!available) return;
+                        if (key === "pass") { usePerk(hotPlayer.id, "pass"); showLeaderboard(); }
+                        else if (key === "deflect") { usePerk(hotPlayer.id, "deflect"); setPhase("deflect-pick"); }
+                        else if (key === "spotlight") { usePerk(hotPlayer.id, "spotlight"); setPhase("spotlight-pick"); }
+                      }}>
+                      {icon}
+                      <span className="perk-name">{label}</span>
+                      <span className="perk-once">{available ? s.perkOnce : s.perkUsed}</span>
+                    </div>
+                  );
+                })}
+              </div>
+              <p style={{ color: "#444", fontSize: 12, textAlign: "center", maxWidth: 300, lineHeight: 1.6 }}>{s.earnedHint} <strong style={{ color: "#34C759" }}>{s.earnedHintBonus}</strong></p>
+              <button className="btn" onClick={() => { setHvotes({}); setHVoterIdx(0); const voters = active.filter(p => p.id !== hotPlayer.id); setNextVoterName(voters[0]?.name); setPassTarget("honesty-voting"); setPhase("pass-phone"); }}>{s.honestyBtn}</button>
+            </div>
+          )}
+
+          {phase === "honesty-voting" && currentHvoter && (
+            <div className="screen">
+              <p className="eyebrow">{s.honestyVoting}</p>
+              <p style={{ color: "#555", fontSize: 13, textAlign: "center" }}>{s.youVote} <strong style={{ color: "#EDEBE4" }}>{currentHvoter.name}</strong></p>
+              <div className="q-box hs">
+                <p className="q-label">{s.questionWas}</p>
+                <p className="q-text">{currentQ.hotseat}</p>
+              </div>
+              <p style={{ color: "#444", fontSize: 13, textAlign: "center" }}>{s.wasHonest} <span style={{ color: "#FF3B3B" }}>{hotPlayer?.name}</span> {s.wasHonestSuffix}</p>
+              <div className="vote-row">
+                <button className="hbtn yes" onClick={() => castHonesty("yes")}><ThumbsUp size={28} strokeWidth={1.5} />{s.yes}</button>
+                <button className="hbtn no" onClick={() => castHonesty("no")}><ThumbsDown size={28} strokeWidth={1.5} />{s.no}</button>
+              </div>
+              <p style={{ color: "#2a2a2a", fontSize: 12 }}>{hVoterIdx + 1} / {honestyVoters.length} {s.votesOf}</p>
+            </div>
+          )}
+
+          {phase === "honesty-result" && hotPlayer && (
+            <div className="screen">
+              <p className="eyebrow">{s.verdict}</p>
+              <div className="hs-name" style={{ color: earnedPoint ? "#34C759" : "#FF3B3B" }}>{hotPlayer.name}</div>
+              <div className="tally">
+                <div className="tblock"><span className="tnum" style={{ color: "#34C759" }}>{yesCount}</span><span className="tlbl"><ThumbsUp size={11} />{s.yes}</span></div>
+                <div style={{ width: 1, background: "#1e1e2e", margin: "0 8px" }} />
+                <div className="tblock"><span className="tnum" style={{ color: "#FF3B3B" }}>{noCount}</span><span className="tlbl"><ThumbsDown size={11} />{s.no}</span></div>
+              </div>
+              {earnedPoint ? <div className="banner pt"><Target size={18} />{s.earnedPoint}</div> : <div className="banner nopt"><XCircle size={18} />{s.noPoint}</div>}
+              {spotlightPlayer
+                ? <button className="btn" style={{ background: "#00C9A7" }} onClick={() => setPhase("spotlight-hotseat")}><Users size={16} />SPOTLIGHT: {spotlightPlayer.name}</button>
+                : <button className="btn" onClick={() => showLeaderboard()}>{s.leaderboardBtn}</button>
+              }
+            </div>
+          )}
+
+          {phase === "deflect-pick" && hotPlayer && (
+            <div className="screen">
+              <Shuffle size={48} color="#7B61FF" strokeWidth={1.5} />
+              <p className="eyebrow" style={{ color: "#7B61FF", marginTop: 8 }}>{s.deflectPick}</p>
+              <div className="player-list">
+                {active.filter(p => p.id !== hotPlayer.id).map(p => (
+                  <div key={p.id} className="player-item" onClick={() => { setHotPlayer(p); setPhase("hotseat-wait"); }}>
+                    <div className="avatar">{p.name[0]}</div>
+                    <span className="p-name">{p.name}</span>
+                    <ChevronRight size={18} color="#333" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {phase === "spotlight-pick" && hotPlayer && (
+            <div className="screen">
+              <Users size={48} color="#00C9A7" strokeWidth={1.5} />
+              <p className="eyebrow" style={{ color: "#00C9A7", marginTop: 8 }}>{s.spotlightPick}</p>
+              <div className="player-list">
+                {active.filter(p => p.id !== hotPlayer.id).map(p => (
+                  <div key={p.id} className="player-item" onClick={() => { setSpotlightPlayer(p); setSpotlightHvotes({}); setSpotlightHVoterIdx(0); setPhase("hotseat-wait"); }}>
+                    <div className="avatar">{p.name[0]}</div>
+                    <span className="p-name">{p.name}</span>
+                    <Users size={16} color="#00C9A7" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {phase === "spotlight-hotseat" && spotlightPlayer && (
+            <div className="screen">
+              <Users size={52} color="#00C9A7" strokeWidth={1.5} />
+              <p className="eyebrow" style={{ color: "#00C9A7" }}>SPOTLIGHT</p>
+              <div className="hs-name" style={{ color: "#00C9A7" }}>{spotlightPlayer.name}</div>
+              <p style={{ color: "#555", fontSize: 13, textAlign: "center" }}>{spotlightPlayer.name} {s.spotlightAnswers}</p>
+              <div className="q-box sp">
+                <p className="q-label">{s.yourQuestion}</p>
+                <p className="q-text">{currentQ.hotseat}</p>
+              </div>
+              <p style={{ color: "#444", fontSize: 12, textAlign: "center", maxWidth: 300, lineHeight: 1.6 }}>{s.earnedHint} <strong style={{ color: "#34C759" }}>{s.earnedHintBonus}</strong></p>
+              <button className="btn" style={{ background: "#00C9A7" }} onClick={() => { setSpotlightHvotes({}); setSpotlightHVoterIdx(0); const voters = active.filter(p => p.id !== spotlightPlayer.id); setNextVoterName(voters[0]?.name); setPassTarget("spotlight-hvoting"); setPhase("pass-phone"); }}>{s.honestyBtn}</button>
+            </div>
+          )}
+
+          {phase === "spotlight-hvoting" && currentSpotlightVoter && (
+            <div className="screen">
+              <p className="eyebrow" style={{ color: "#00C9A7" }}>{s.honestyVoting}</p>
+              <p style={{ color: "#555", fontSize: 13, textAlign: "center" }}>{s.youVote} <strong style={{ color: "#EDEBE4" }}>{currentSpotlightVoter.name}</strong></p>
+              <div className="q-box sp">
+                <p className="q-label">{s.questionWas}</p>
+                <p className="q-text">{currentQ.hotseat}</p>
+              </div>
+              <p style={{ color: "#444", fontSize: 13, textAlign: "center" }}>{s.wasHonest} <span style={{ color: "#00C9A7" }}>{spotlightPlayer?.name}</span> {s.wasHonestSuffix}</p>
+              <div className="vote-row">
+                <button className="hbtn yes" onClick={() => castSpotlightHonesty("yes")}><ThumbsUp size={28} strokeWidth={1.5} />{s.yes}</button>
+                <button className="hbtn no" onClick={() => castSpotlightHonesty("no")}><ThumbsDown size={28} strokeWidth={1.5} />{s.no}</button>
+              </div>
+              <p style={{ color: "#2a2a2a", fontSize: 12 }}>{spotlightHVoterIdx + 1} / {spotlightVoters.length} {s.votesOf}</p>
+            </div>
+          )}
+
+          {phase === "spotlight-result" && spotlightPlayer && (
+            <div className="screen">
+              <p className="eyebrow" style={{ color: "#00C9A7" }}>SPOTLIGHT - {s.verdict}</p>
+              <div className="hs-name" style={{ color: spEarned ? "#34C759" : "#FF3B3B" }}>{spotlightPlayer.name}</div>
+              <div className="tally">
+                <div className="tblock"><span className="tnum" style={{ color: "#34C759" }}>{spYes}</span><span className="tlbl"><ThumbsUp size={11} />{s.yes}</span></div>
+                <div style={{ width: 1, background: "#1e1e2e", margin: "0 8px" }} />
+                <div className="tblock"><span className="tnum" style={{ color: "#FF3B3B" }}>{spNo}</span><span className="tlbl"><ThumbsDown size={11} />{s.no}</span></div>
+              </div>
+              {spEarned ? <div className="banner pt"><Target size={18} />{s.earnedPoint}</div> : <div className="banner nopt"><XCircle size={18} />{s.noPoint}</div>}
+              <button className="btn" onClick={() => showLeaderboard({ spotlightId: spotlightPlayer.id, spEarned })}>{s.leaderboardBtn}</button>
+            </div>
+          )}
+
+          {phase === "round-leaderboard" && (
+            <div className="screen">
+              <div className="rdots">
+                {Array.from({ length: TOTAL_ROUNDS }).map((_, i) => (
+                  <div key={i} className={`rdot${i < qIndex ? " done" : i === qIndex ? " cur" : ""}`} />
+                ))}
+              </div>
+              <p className="eyebrow">{s.leaderboardTitle} - {lang === "bs" ? "Nakon runde" : "After round"} {qIndex + 1}</p>
+              <div style={{ width: "100%", maxWidth: 420 }}>
+                {[...players].sort((a, b) => b.points - a.points).map((p, i) => {
+                  const justScored = lastScorers.includes(p.id);
+                  const isFirst = i === 0;
+                  return (
+                    <div key={p.id} className={`lb-row${justScored ? " scored" : ""}${isFirst ? " first" : ""}`}>
+                      <span className={`lb-rank${isFirst ? " top" : ""}`}>{i + 1}</span>
+                      <div className="avatar" style={isFirst ? { background: "#FFD700", color: "#000" } : justScored ? { background: "#34C759", color: "#fff" } : {}}>{p.name[0]}</div>
+                      <span className="p-name">{p.name}{justScored && <span className="lb-badge">+1 {s.leaderboardScored}</span>}</span>
+                      <span className="lb-pts">{p.points}<span style={{ fontSize: 13, color: "#555" }}>pt</span></span>
+                    </div>
+                  );
+                })}
+              </div>
+              <button className="btn" onClick={advanceRound}>
+                {qIndex + 1 >= TOTAL_ROUNDS ? s.leaderboardFinal : `${s.leaderboardNext} ${qIndex + 2}`}
+              </button>
+            </div>
+          )}
+
+          {phase === "scoreboard" && (
+            <div className="screen">
+              <div className="icon-hero"><Trophy size={64} color="#FFD700" strokeWidth={1.5} /></div>
+              <p className="eyebrow" style={{ color: "#FFD700" }}>{s.finalResults}</p>
+              <div className="wordmark" style={{ color: "#FFD700", fontSize: "clamp(34px,8vw,58px)" }}>{sorted[0]?.name}</div>
+              <p style={{ color: "#555", fontSize: 13, marginBottom: 4 }}>{s.winnerSuffix} {sorted[0]?.points} {s.winnerPoints}</p>
+              {sorted.map((p, i) => (
+                <div key={p.id} className={`score-row${i === 0 ? " first" : ""}`}>
+                  <span className="srank">{i + 1}</span>
+                  <div className="avatar" style={i === 0 ? { background: "#FFD700", color: "#000" } : {}}>{p.name[0]}</div>
+                  <span className="p-name">{p.name}</span>
+                  <span className="spts">{p.points}pt</span>
+                </div>
+              ))}
+              <button className="btn" style={{ marginTop: 4 }} onClick={() => { setPhase("intro"); setNames([]); setPlayers([]); setQIndex(0); setPlayerCount(6); }}>{s.playAgain}</button>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
