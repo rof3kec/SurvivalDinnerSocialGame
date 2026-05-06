@@ -52,97 +52,130 @@
     const ArrowLeft    = _icon('<line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>');
     const ChevronRight = _icon('<polyline points="9 18 15 12 9 6"/>');
 
-    const QUESTIONS_BS = [
-      { group: "Ko bi prevario/la partnera ako bi znao/la da nece biti uhvacen/a?", hotseat: "Da li bi prevario/la partnera ako bi znao/la da necos biti uhvacen/a? Obrazlozi!" },
-      { group: "Ko je vec prevario/la i nikome nije rekao/la?", hotseat: "Jesi li ikad prevario/la nekoga a nikome rekao/la? Ispricaj!" },
-      { group: "Ko ima najveci body count u sobi?", hotseat: "Koliki je tvoj body count? Budi iskren/a!" },
-      { group: "Ko je ukrao/la nesto vrijedno i nikad se nije kajao/la?", hotseat: "Jesi li ikad ukrao/la nesto vrijedno? Kajas li se?" },
-      { group: "Ko bi prodao/la intimnu tajnu prijatelja za veliku sumu?", hotseat: "Da li bi prodao/la intimnu tajnu prijatelja za novac? Ciju bi najlakse prodao/la?" },
-      { group: "Ko je lagao/la partneru o tome gdje je bio/la?", hotseat: "Jesi li lagao/la partneru gdje si bio/la? Sta si zapravo radio/la?" },
-      { group: "Ko je imao/la seks dok je neko drugi bio u istom stanu?", hotseat: "Jesi li imao/la seks dok je neko drugi bio u istom stanu ili kuci? Detalji!" },
-      { group: "Ko bi najbrze prevario/la kompaniju na troskovima?", hotseat: "Da li bi prevario/la kompaniju na troskovima? Jesi li to ikad uradio/la?" },
-      { group: "Ko je najvjerovatnije da ima tajni profil na dating appu?", hotseat: "Imas li ili si ikad imao/la tajni profil na dating appu dok si bio/la u vezi?" },
-      { group: "Ko bi spavao/la sa sefom za unapredenje?", hotseat: "Da li bi spavao/la sa sefom za unapredenje? Gdje ti je granica?" },
-      { group: "Ko se budio/la pored nekoga cije ime nije znao/la?", hotseat: "Jesi li se probudio/la pored nekoga cije ime nisi znao/la? Ispricaj!" },
-      { group: "Ko je slao/la eksplicitne poruke nekome ko nije partner?", hotseat: "Jesi li slao/la eksplicitne poruke nekome ko nije bio/la tvoj partner? Kome?" },
-      { group: "Ko bi ukrao/la novac od prijatelja ako bi znao/la da nece biti uhvacen/a?", hotseat: "Da li bi ukrao/la novac od prijatelja ako bi znao/la da necos biti uhvacen/a?" },
-      { group: "Ko je glumio/la orgazam?", hotseat: "Jesi li ikad glumio/la orgazam? Sa kim i zasto?" },
-      { group: "Ko je najvjerovatnije da ima neku tajnu fetisu?", hotseat: "Imas li neku tajnu fetisu? Koja je?" },
-      { group: "Ko je bio/la treci u necijoj vezi?", hotseat: "Jesi li ikad bio/la treci u necijoj vezi, svjesno ili nesvjesno?" },
-      { group: "Ko je najvjerovatnije da gleda porno na poslu?", hotseat: "Jesi li ikad gledao/la porno za vrijeme radnog vremena?" },
-      { group: "Ko je ukrao/la nesto iz prodavnice i ponosan/na je na to?", hotseat: "Jesi li ikad ukrao/la nesto iz prodavnice? Kajas li se ili si ponosan/na?" },
-      { group: "Ko bi ostavio/la partnera zbog bogatog/e?", hotseat: "Da li bi ostavio/la partnera zbog nekoga znatno bogatijeg? Koliko bogat?" },
-      { group: "Ko je imao/la seks na prvom dejtu?", hotseat: "Jesi li imao/la seks na prvom dejtu? Ispricaj!" },
-      { group: "Ko lze o svom broju seksualnih partnera?", hotseat: "Lzes li o svom broju seksualnih partnera? Koji je pravi broj?" },
-      { group: "Ko bi spavao/la sa nekim u ovoj sobi uz pravu ponudu?", hotseat: "Da li bi spavao/la sa nekim ovdje uz pravu ponudu? S kim i za koliko?" },
-      { group: "Ko je najvjerovatnije da ima dvostruki zivot?", hotseat: "Imas li neku stranu sebe koju skoro niko ne zna? Sta je to?" },
-      { group: "Ko bi snimio/la seks video bez da pita partnera?", hotseat: "Da li bi snimio/la seks bez da pitas partnera? Jesi li to ikad uradio/la?" },
-      { group: "Ko je citao/la tude poruke bez dozvole?", hotseat: "Jesi li citao/la tude poruke bez dozvole? Cije i sta si pronasao/la?" },
-      { group: "Ko bi prevario/la na ispitu ili vec jeste?", hotseat: "Jesi li ikad varao/la na ispitu? Kako i kajas li se?" },
-      { group: "Ko je najgori u krevetu po sopstvenoj procjeni?", hotseat: "Koja je tvoja najveca slabost u krevetu? Budi iskren/a!" },
-      { group: "Ko bi najvjerovatnije zavrsio/la u zatvoru i zbog cega?", hotseat: "Zbog cega bi najvjerovatnije zavrsio/la u zatvoru? Budi iskren/a!" },
-      { group: "Ko je imao seks na najcudnijem mjestu?", hotseat: "Gdje je najcudnije mjesto na kome si imao/la seks? Detalji obavezni!" },
-      { group: "Ko bi spavao/la sa nekim od partnera prisutnih ovdje?", hotseat: "Da li bi spavao/la sa nekim od partnera prisutnih ovdje da si slobodan/na? S kim?" },
-      { group: "Ko je bio/la u najtoksicnijoj vezi svog zivota?", hotseat: "Koja je bila tvoja najtoksicnija veza? Sta si radio/la u njoj?" },
-      { group: "Ko bi pristao/la na seksualni predlog od privlacnog stranca?", hotseat: "Da li bi pristao/la na seksualni predlog od privlacnog stranca za jednu noc? Pod kojim uslovima?" },
-      { group: "Ko je imao/la seks sa nekim sa velikom razlikom u godinama?", hotseat: "Jesi li imao/la seks sa nekim sa velikom razlikom u godinama? Koliko velika razlika?" },
-      { group: "Ko je najvjerovatnije da je probao/la nesto ilegalno?", hotseat: "Jesi li ikad probao/la nesto ilegalno? Sta i kako je proslo?" },
-      { group: "Ko je poslao/la intimnu sliku nekome ko je nije trazio/la?", hotseat: "Jesi li ikad poslao/la intimnu sliku nekome ko je nije trazio/la? Ispricaj!" },
-      { group: "Ko bi varao/la u braku ako bi mu se ukazala savrsena prilika?", hotseat: "Da li bi varao/la u braku ako bi znao/la da nikad necos biti uhvacen/a?" },
-      { group: "Ko je najduze lagao/la partneru o necemu ozbiljnom?", hotseat: "Sta je najduze i najozbiljnije sto si lagao/la partneru? Koliko dugo?" },
-      { group: "Ko bi prihvatio/la novac od bogatog ljubavnika/ce?", hotseat: "Da li bi prihvatio/la finansijsku podrsku od bogatog ljubavnika/ce i ostao/la u toj vrsti veze?" },
-      { group: "Ko je imao/la seksualne fantazije o nekome u ovoj sobi?", hotseat: "Jesi li ikad imao/la seksualne fantazije o nekome ovdje? O kome?" },
-      { group: "Ko je bio/la u seksualnoj situaciji sa vise od jedne osobe?", hotseat: "Jesi li ikad bio/la u seksualnoj situaciji sa vise od jedne osobe? Ispricaj!" },
-      { group: "Ko bi uvijedio/la partnera da pristane na nesto sto ne zeli u krevetu?", hotseat: "Da li si ikad nagovorio/la partnera na nesto seksualno sto nije htio/htjela? Kako?" },
-      { group: "Ko je najvjerovatnije da je stalkao/la bivseg/u na mrezama?", hotseat: "Jesi li ikad stalkao/la bivseg/u na mrezama? Koliko daleko si otisao/la?" },
-      { group: "Ko bi spavao/la sa poznatom osobom samo zbog statusa?", hotseat: "Da li bi spavao/la sa poznatom osobom samo zbog toga sto je poznata? S kim bi najlakse?" },
-      { group: "Ko je imao/la seks na javnom mjestu?", hotseat: "Jesi li imao/la seks na javnom mjestu gdje te neko mogao vidjeti? Gdje i kako?" },
-      { group: "Ko bi iskoristio/la kompromitujuci materijal o bivsom/oj?", hotseat: "Da li bi iskoristio/la kompromitujuci materijal o bivsom/oj da dobijas nesto? Sta bi trazio/la?" },
-      { group: "Ko je lagao/la o svom poslu ili prihodima da bi impresionirao/la?", hotseat: "Jesi li ikad lagao/la o poslu ili prihodima da bi impresionirao/la nekoga? Kome i kako?" },
-      { group: "Ko bi napustio/la sve zbog savrsene seksualne hemije?", hotseat: "Da li bi napustio/la posao, grad i vezu zbog nekoga s kim imas savrsenu hemiju ali nista drugo zajednicko?" },
-      { group: "Ko se najvise stidi necega sto je uradio/la pijan/a?", hotseat: "Cega se najvise stidis od stvari koje si uradio/la pijan/a? Ispricaj!" },
-      { group: "Ko krije koliko novca zaista trosi?", hotseat: "Krijes li od partnera ili porodice koliko novca zaista trocis? Na sta?" },
-      { group: "Ko je bio/la najgori/a u krevetu i znao/la to?", hotseat: "Sjecas li se nekog seksualnog iskustva koje je bilo katastrofa? Ispricaj!" },
-      { group: "Ko bi pristao/la da bude placena pratnja bogatasu na putovanju?", hotseat: "Da li bi pristao/la da budes placena pratnja bogatasu na luksuznom putovanju?" },
-      { group: "Ko je najvjerovatnije da je imao/la seks sa kolegom/icom s posla?", hotseat: "Jesi li ikad imao/la seks ili romanticnu situaciju sa kolegom/icom? Ispricaj!" },
-      { group: "Ko bi pristao/la na open relationship ako bi partner to zahtijevao/la?", hotseat: "Da li bi pristao/la na otvorenu vezu ako bi partner to zahtijevao/la ili bi otisao/la?" },
-      { group: "Ko bi ostavio/la partnera putem poruke da moze proci nekaz njeno?", hotseat: "Da li bi ostavio/la partnera putem poruke ili ignorisanjem da si siguran/na da nema posljedica?" },
-      { group: "Ko je najvise iskompleksiran/a svojom prosloscu?", hotseat: "Koja stvar iz tvoje proslosti te najvise sramoti ili kompleksira danas?" },
-      { group: "Ko bi skinuo/la se za novac na internetu?", hotseat: "Da li bi ikad postavio/la eksplicitni sadrzaj na internet za novac? Pod kojim uslovima?" },
-      { group: "Ko je najvjerovatnije da je krisom snimao/la razgovor sa prijateljem/icom?", hotseat: "Jesi li ikad krisom snimao/la razgovor sa prijateljem ili partnerom? Zasto?" },
-      { group: "Ko je bio/la najvise obuzet/a nekim ko ga/je nije volio/la?", hotseat: "Jesi li ikad bio/la opsjednut/a nekim ko te nije uzvracalo osjecaje? Sta si radio/la?" },
-      { group: "Ko je bio/la toliko privucen/a nekim da je uradio/la nesto za sto se stidi?", hotseat: "Jesi li ikad bio/la toliko privucen/a nekim da si uradio/la nesto ponizavajuce da ga/je dobijas?" },
-      { group: "Ko je imao/la seks pod uticajem supstanci i zazalio/la?", hotseat: "Jesi li imao/la seks pod uticajem alkohola ili droga i zazalio/la? Ispricaj!" },
-      { group: "Ko je najvjerovatnije da je napravio/la lazni profil na mrezama?", hotseat: "Jesi li ikad napravio/la lazni profil na drustvenim mrezama? Zasto i sto si radio/la s njim?" },
-      { group: "Ko bi pristao/la da glumi nesto u krevetu sto mu/joj se ne svidja?", hotseat: "Da li si ikad glumio/la uzivanje u necemu sto ti se u krevetu nije svidjalo? Sta je to bilo?" },
-      { group: "Ko bi pristao/la da izda prijatelja za veliki karijerni napredak?", hotseat: "Da li bi iskoristio/la ili izdao/la prijatelja ako bi to znacilo veliki karijerni skok?" },
-      { group: "Ko je najvjerovatnije da je lazirao/la bolest da izbjegne obavezu?", hotseat: "Jesi li ikad lazirao/la bolest ili hitnu situaciju da izbjegnes nesto? Sta i zasto?" },
-      { group: "Ko bi potpisao/la ugovor o tajnosti da sakrije skandal bogatog partnera?", hotseat: "Da li bi potpisao/la NDA da sakrijes skandal bogatog/e partnera za veliku sumu novca?" },
-      { group: "Ko je najvjerovatnije da je imao/la seks u autu?", hotseat: "Jesi li ikad imao/la seks u autu? Gdje i kako je proslo?" },
-      { group: "Ko bi najbrze prekinuo/la prijateljstvo za dovoljno novca?", hotseat: "Za koliko novca bi prekinuo/la dugogodisnje prijateljstvo bez objasnjenja?" },
-      { group: "Ko bi napravio/la dijete bez pristanka partnera?", hotseat: "Da li bi ikad sabotirao/la kontracepciju bez znanja partnera? Budi iskren/a!" },
-      { group: "Ko je najvjerovatnije da je citao/la dnevnik nekoga bliskog?", hotseat: "Jesi li ikad citao/la neciji dnevnik ili privatne biljeske? Cije i sta si pronasao/la?" },
-      { group: "Ko bi pristao/la na brak iz interesa bez ljubavi?", hotseat: "Da li bi se ozenio/udala iz finansijskog interesa bez prave ljubavi? Za koliko?" },
-      { group: "Ko je najvjerovatnije da je lazirao/la orgazam vise od deset puta?", hotseat: "Koliko puta si otprilike glumio/la orgazam? Sa istom osobom ili razlicitim?" },
-      { group: "Ko bi najvjerovatnije pristao/la na swap partnera?", hotseat: "Da li bi pristao/la na razmjenu partnera sa bliskim parom? Pod kojim uslovima?" },
-      { group: "Ko je najvjerovatnije da je lagao/la terapeutu ili ljekaru?", hotseat: "Jesi li ikad lagao/la terapeutu ili ljekaru o necemu vaznom? Sta i zasto?" },
-      { group: "Ko je najvjerovatnije da je ukrao/la partnera od prijatelja?", hotseat: "Jesi li ikad bio/la zainteresovan/a za partnera bliskog prijatelja i djelovao/la po tome?" },
-      { group: "Ko bi najvjerovatnije pristao/la na seks u zamjenu za luksuzni poklon?", hotseat: "Da li bi pristao/la na seksualnu situaciju u zamjenu za skupocjeni poklon ili putovanje?" },
-      { group: "Ko bi pristao/la da bude sugarmama ili sugardaddy?", hotseat: "Da li bi pristao/la da finansiras mladju osobu u zamjenu za kompaniju i intimnost?" },
-      { group: "Ko je najvjerovatnije da je imao/la romansu sa osobom koja je bila u braku?", hotseat: "Jesi li ikad bio/la u romansi ili seksualnoj situaciji sa osobom koja je bila u braku? Ispricaj!" },
-      { group: "Ko bi najvjerovatnije ostavio/la partnera ako bi dobio/la nasljedstvo?", hotseat: "Da li bi promijenio/la svog partnera kada bi odjednom dobio/la veliku sumu novca?" },
-      { group: "Ko je koristio/la seks kao oruzje ili nagradu u vezi?", hotseat: "Jesi li ikad koristio/la seks kao nagradu ili uskracivao/la ga kao kaznu? Ispricaj!" },
-      { group: "Ko se najvjerovatnije nikad nije potpuno otvorio/la ni jednom partneru?", hotseat: "Postoji li nesto sto nisi nikad rekao/la nijednom partneru? Sta je to, uopsteno?" },
-      { group: "Ko je najvjerovatnije da je platio/la za seks ili primio/la novac za seks?", hotseat: "Jesi li ikad bio/la u situaciji gdje je novac eksplicitno ili implicitno bio dio seksualne situacije?" },
-      { group: "Ko bi najvjerovatnije ostavio/la sve i pobjegao/la s nekim strancem?", hotseat: "Da li bi ikad mogao/la ostaviti sve i otputovati sa nekim koga jedva poznajesvjero?" },
-      { group: "Ko se ponasa najdrugacije kada je sam/a nego u drustvu?", hotseat: "Koliko si drugaciji/a kada si sam/a u odnosu na to kako se predstavljas u drustvu? Sta krijes?" },
-      { group: "Ko je najvjerovatnije da je namjerno unistio/la neciju vezu?", hotseat: "Jesi li ikad svjesno uradio/la nesto da unistis vezu nekoga drugog? Zasto?" },
-      { group: "Ko je imao/la seks samo da ne bi bio/la sam/a?", hotseat: "Jesi li ikad imao/la seks sa nekim samo zato sto si se osjecao/la usamljeno, a ne jer si to zaista htio/la?" },
-      { group: "Ko je imao/la seks sa nekim od prisutnih ovdje, a niko ne zna?", hotseat: "Da li si ikad imao/la seks sa nekim u ovoj sobi ili bliskom krugu, a to je ostalo tajna? Ispricaj!" },
-      { group: "Ko bi pristao/la da bude necija tajna veza i nikad ne bude predstavljen/a javno?", hotseat: "Da li bi pristao/la da si necija skrivena veza, bez javnog statusa, bez zajednickih izlazaka? Za koliko dugo?" },
-      { group: "Ko je bio/la toliko privucen/a nekim da je uradio/la nesto ponizavajuce da ga/je dobije?", hotseat: "Jesi li ikad bio/la toliko privucen/a nekim da si uradio/la nesto sramotno da ga/je dobijas?" },
-      { group: "Ko bi najvjerovatnije ostao/la tih o zlocinu prijatelja da ga/je zastitio/la?", hotseat: "Da li bi pokrio/la prijatelja koji je pocinio ozbiljan zlocin? Gdje ti je granica?" },
-      { group: "Ko bi najvjerovatnije lazirao/la trudnocu ili bolest da zadrzao/la partnera?", hotseat: "Da li bi lazirao/la trudnocu ili ozbiljnu bolest da zadrzis partnera? Jesi li ikad uradio/la nesto slicno?" },
+    const QUESTIONS_BS = [];
+
+    // LEMONS MODE — 100 questions across 10 classic categories, a little spicy
+    const QUESTIONS_LEMONS = [
+
+      // ── 1. WORK ETHIC ──
+      { group: "Who is the biggest slacker in the room?", hotseat: "Be honest — what's the least amount of work you've done in a week and still got paid for it?" },
+      { group: "Who has mastered looking busy without doing anything?", hotseat: "What's your go-to trick for appearing productive when you're doing absolutely nothing?" },
+      { group: "Who is first out the door at 5pm every single day?", hotseat: "Have you ever left early and pretended you had somewhere important to be? What was the real reason?" },
+      { group: "Who works the hardest but complains the least about it?", hotseat: "What's the most you've ever sacrificed for work, and do you think it was worth it?" },
+      { group: "Who has the best work ethic in the room, hands down?", hotseat: "What's a professional standard you hold yourself to that you notice most people don't bother with?" },
+      { group: "Who has taken the longest lunch break and gotten away with it?", hotseat: "What's the longest 'lunch break' you've ever taken — and what were you actually doing?" },
+      { group: "Who would be hardest to replace if they disappeared tomorrow?", hotseat: "What's the one thing you do here that nobody else actually knows how to do?" },
+      { group: "Who avoids the boring tasks by being suspiciously 'busy' with something else?", hotseat: "What type of work do you systematically avoid, and how do you make sure it lands on someone else?" },
+      { group: "Who has stayed late to fix something they broke in the first place?", hotseat: "Tell us about a work mistake you had to quietly clean up before anyone noticed." },
+      { group: "Who coasts on their reputation more than their actual output?", hotseat: "Is your professional reputation fully earned right now, or are you running on credit from past work?" },
+
+      // ── 2. OFFICE GOSSIP & POLITICS ──
+      { group: "Who knows the most office gossip and pretends they don't?", hotseat: "What's the most interesting piece of office gossip you know — you don't have to name names, but give us the shape of it." },
+      { group: "Who is the best at workplace politics without looking political?", hotseat: "What's a move you've made at work that was more strategic than it appeared at the time?" },
+      { group: "Who has vented about a colleague and then acted completely normal around them?", hotseat: "Have you ever said something harsh about a coworker behind their back that you'd never say to their face?" },
+      { group: "Who started or spread a rumour at work, even accidentally?", hotseat: "Has something you said at work ever taken on a life of its own? What happened?" },
+      { group: "Who has formed an unofficial alliance at work to get something done or someone out?", hotseat: "Have you ever teamed up with someone at work specifically to influence a situation or a person? Tell us." },
+      { group: "Who smiles at someone in a meeting and then rolls their eyes the second it ends?", hotseat: "Who at work gets a very different version of you than what they think they're getting?" },
+      { group: "Who has the most controversial opinion about someone in leadership?", hotseat: "What's your honest, unfiltered opinion of how your company is run — things you'd never say in a review?" },
+      { group: "Who is the most two-faced person in professional settings?", hotseat: "Describe the biggest gap between how you present yourself at work and what you actually think." },
+      { group: "Who has used someone else's mistake to make themselves look better?", hotseat: "Have you ever let someone else take blame — fully or partly — when you were involved too?" },
+      { group: "Who would survive longest in a really toxic workplace?", hotseat: "What's the most politically complicated work situation you've ever navigated, and how did you come out of it?" },
+
+      // ── 3. CAREER & AMBITION ──
+      { group: "Who is most likely to be CEO of something in ten years?", hotseat: "What's your actual career goal — the one you don't always say out loud?" },
+      { group: "Who secretly thinks they're better than their current role?", hotseat: "Do you feel like you're where you should be in your career right now — or are you playing it too safe?" },
+      { group: "Who would quit tomorrow if the right opportunity walked in?", hotseat: "What would the perfect job offer look like for you right now? Be specific." },
+      { group: "Who has the most dramatic career pivot story?", hotseat: "What's the biggest professional U-turn you've made, and do you regret any of it?" },
+      { group: "Who is most likely to start their own business within five years?", hotseat: "Do you have a business idea you actually believe in? What's stopping you from starting it?" },
+      { group: "Who has the most regrets about career choices they made?", hotseat: "What's the professional decision you wish you could go back and change?" },
+      { group: "Who is most underestimated in a professional setting?", hotseat: "What skill or quality do you have that almost nobody at work has figured out yet?" },
+      { group: "Who would sell out their values for a significant promotion?", hotseat: "What's the most you'd be willing to compromise professionally to get to the next level?" },
+      { group: "Who has the clearest five-year plan?", hotseat: "Walk us through your five-year plan. If you don't have one, tell us why not." },
+      { group: "Who has lied on their CV and built an entire career on it?", hotseat: "What's the most you've ever stretched the truth on a CV or in a job interview?" },
+
+      // ── 4. THE BOSS RELATIONSHIP ──
+      { group: "Who is best at managing their manager?", hotseat: "What's your honest technique for keeping your boss happy regardless of what you're actually doing?" },
+      { group: "Who has the most complicated relationship with authority figures at work?", hotseat: "Tell us about a boss who made your life difficult — what happened and how did you handle it?" },
+      { group: "Who would go over their boss's head without hesitation if they had to?", hotseat: "Have you ever escalated something above your direct manager? How did that go?" },
+      { group: "Who sucks up to the boss the most and knows it?", hotseat: "What's the most obvious thing you've ever done to get into a manager's good books?" },
+      { group: "Who thinks they could do their boss's job better than them?", hotseat: "What would you do differently if you were in your boss's position starting tomorrow?" },
+      { group: "Who has had a falling out with a boss they used to love?", hotseat: "Tell us about a professional relationship that went sour — what changed and who was at fault?" },
+      { group: "Who has the best story of a boss being completely wrong about something?", hotseat: "Tell us about a time your boss made a bad call and you either said something or had to bite your tongue." },
+      { group: "Who would absolutely not survive under a micromanaging boss?", hotseat: "What's the least amount of oversight you need to do your best work, and has anyone ever crossed that line?" },
+      { group: "Who has gotten a favour from a boss that others didn't know about?", hotseat: "Has a manager ever made an exception for you that they wouldn't have made for others? What was it?" },
+      { group: "Who has complained about their boss to HR or close to it?", hotseat: "What's the most seriously you've ever considered making a formal complaint at work — and what stopped you?" },
+
+      // ── 5. MONEY & SALARY ──
+      { group: "Who has no idea what their colleagues earn and is dying to know?", hotseat: "If you found out a colleague doing the same job earned significantly more than you, what would you actually do?" },
+      { group: "Who negotiated their salary the hardest?", hotseat: "Walk us through how you've negotiated pay — did you lowball yourself, or did you push hard?" },
+      { group: "Who is most likely to ask a colleague what they earn directly?", hotseat: "Have you ever found out what a colleague earns? How did you find out, and did it change anything?" },
+      { group: "Who thinks they are underpaid and everyone should know it?", hotseat: "Do you think you're paid fairly for what you do? What would fair actually look like for you?" },
+      { group: "Who has inflated an expense claim, even just a little?", hotseat: "Have you ever submitted an expense that was a bit creative with the truth? What was it for?" },
+      { group: "Who spends their salary the fastest after payday?", hotseat: "Where does your money actually go — be honest about what you spend the most on that you probably shouldn't." },
+      { group: "Who would take a pay cut for a job they actually loved?", hotseat: "What's the lowest salary you'd accept to do work that genuinely excited you — where's your floor?" },
+      { group: "Who lies about how much they earn, up or down?", hotseat: "Do you tell people the truth about what you earn — and why or why not?" },
+      { group: "Who has the worst relationship with money in the room?", hotseat: "What's your biggest financial bad habit, and how long have you been meaning to fix it?" },
+      { group: "Who has done something purely for the money and hated every minute?", hotseat: "What's the most soul-crushing thing you've done professionally because the money was too good to turn down?" },
+
+      // ── 6. REMOTE WORK & OFFICE LIFE ──
+      { group: "Who has done something wildly inappropriate on a video call?", hotseat: "What's the most awkward or embarrassing thing that's happened to you on a work video call?" },
+      { group: "Who is most likely to have their camera off and be doing something completely unrelated?", hotseat: "What's the most unrelated thing you've done during a meeting you were supposed to be present in?" },
+      { group: "Who would go fully remote and never come back if they could?", hotseat: "If you could never set foot in an office again, would that actually make you happier or worse off?" },
+      { group: "Who has the messiest home desk setup?", hotseat: "Describe your actual work-from-home setup — and be honest about how chaotic it gets." },
+      { group: "Who has taken a work call from the most inappropriate place?", hotseat: "What's the strangest place you've taken a work call from — and did anyone find out?" },
+      { group: "Who would be first to fake a connection issue to get out of a meeting?", hotseat: "Have you ever faked a technical problem to escape a call or meeting? How many times?" },
+      { group: "Who has complained about the office the most but misses it when working from home?", hotseat: "What's the thing about the office you'd never admit you actually miss when you're working remotely?" },
+      { group: "Who has the most extreme opinion about open-plan offices?", hotseat: "What's your honest take on open-plan offices — productive collaboration or daily misery?" },
+      { group: "Who has eaten something absolutely foul at their desk and gotten comments about it?", hotseat: "What's the worst thing you've ever eaten at your desk — and did anyone say anything?" },
+      { group: "Who is the unofficial social coordinator of the workplace?", hotseat: "Be honest — do you actually enjoy work social events, or do you go purely out of obligation?" },
+
+      // ── 7. TEAM DYNAMICS ──
+      { group: "Who is the weakest link in a group project and knows it?", hotseat: "In a team setting, what role do you usually fall into — and is that the role you should be in?" },
+      { group: "Who takes credit for the team's work a little too easily?", hotseat: "Have you ever presented something in a way that made your contribution sound bigger than it was? Tell us." },
+      { group: "Who is the one everyone goes to when there's a problem?", hotseat: "What's a work problem someone recently brought to you — and how did you actually handle it?" },
+      { group: "Who is most likely to throw a colleague under the bus to save themselves?", hotseat: "Has there ever been a moment at work where you let someone else carry more blame than they deserved?" },
+      { group: "Who does the least in group work but always has an excuse ready?", hotseat: "What's your best excuse for not pulling your weight on a team project — the one you've actually used?" },
+      { group: "Who is the best at resolving conflict at work without making it worse?", hotseat: "Tell us about a workplace conflict you were involved in — how did you handle it and what would you do differently?" },
+      { group: "Who has had a genuine falling out with a coworker?", hotseat: "What's the most serious professional conflict you've had with a colleague — who was right, really?" },
+      { group: "Who is secretly carrying the team right now?", hotseat: "Is there someone on your current team who isn't pulling their weight — and has anyone said anything about it?" },
+      { group: "Who would be voted off the island first in a real Survivor work edition?", hotseat: "What's the habit or trait of yours at work that you think irritates your colleagues the most?" },
+      { group: "Who has gone to a manager about a colleague's behaviour?", hotseat: "Have you ever reported or raised concerns about a colleague's performance or attitude? What happened?" },
+
+      // ── 8. PERSONAL HABITS ──
+      { group: "Who drinks the most at work events and always has a story to prove it?", hotseat: "What's the most memorable thing you've done at a work party after one too many drinks?" },
+      { group: "Who is still claiming to be a social smoker after five years?", hotseat: "Be honest — what's your actual relationship with cigarettes right now?" },
+      { group: "Who has the worst coffee addiction in the room?", hotseat: "How many coffees a day is too many — and how many do you actually have?" },
+      { group: "Who eats the strangest things and defends it aggressively?", hotseat: "What's a food combination or habit of yours that other people find disgusting but you love?" },
+      { group: "Who is most likely to be hungover at a Monday morning meeting?", hotseat: "Have you ever shown up to work still drunk or genuinely suffering from the night before? Tell us." },
+      { group: "Who has the most extreme sleep schedule in the room?", hotseat: "What time do you actually go to sleep and wake up — and how is that working out for you?" },
+      { group: "Who spends the most money on food and doesn't track it at all?", hotseat: "What's your real daily food spending — coffee, lunch, snacks, all of it — and do you want to know the number?" },
+      { group: "Who would be lost without their phone for a single workday?", hotseat: "What do you spend the most embarrassing amount of time on your phone doing during work hours?" },
+      { group: "Who has the most chaotic morning routine and still arrives pretending everything is fine?", hotseat: "Walk us through your actual morning on a day you're running late — how bad does it get?" },
+      { group: "Who stress-eats the most and absolutely refuses to acknowledge it?", hotseat: "What do you reach for when work is stressing you out — and how much of it do you consume?" },
+
+      // ── 9. LOVE LIFE ──
+      { group: "Who has had a crush on someone at work and did absolutely nothing about it?", hotseat: "Have you ever been attracted to someone at work? How obvious were you about it — honestly?" },
+      { group: "Who is most likely to have dated someone from the office?", hotseat: "Have you ever had a romantic situation with a coworker? How did it start and how did it end?" },
+      { group: "Who falls hardest and fastest in relationships?", hotseat: "How quickly do you typically catch feelings — and has it ever made you do something you regret?" },
+      { group: "Who is most likely to still be texting an ex at 2am?", hotseat: "Be honest — do you have an ex you haven't fully let go of? What keeps you going back?" },
+      { group: "Who has the worst taste in partners according to their friends?", hotseat: "What's a type of person you keep going for that your friends have clearly questioned?" },
+      { group: "Who puts the least effort into maintaining a relationship once they've got the person?", hotseat: "Have you ever let yourself get comfortable in a relationship to the point where the other person noticed? Tell us." },
+      { group: "Who is most likely to ghost someone rather than have an uncomfortable conversation?", hotseat: "Have you ever ghosted someone — romantically or otherwise? What's your justification?" },
+      { group: "Who has the longest gap between relationships and is totally fine with it?", hotseat: "What's the longest you've been single as an adult — and was it a choice or did it just happen?" },
+      { group: "Who has the most entertaining first date disaster story?", hotseat: "Tell us your worst or most awkward first date story. The more detail the better." },
+      { group: "Who would move cities for a relationship and has either done it or seriously considered it?", hotseat: "How much have you changed your life for a relationship — or how much would you be willing to?" },
+
+      // ── 10. PERSONALITY & REPUTATION ──
+      { group: "Who has the biggest gap between their public persona and who they actually are?", hotseat: "How different are you at work versus at home — and which version would surprise people more?" },
+      { group: "Who is most likely to be brutally honest when someone asks for their opinion?", hotseat: "Tell us about a time you gave someone feedback they didn't want to hear. How did it land?" },
+      { group: "Who is the most stubborn person in the room?", hotseat: "What's something you've refused to budge on — professionally or personally — even when you were probably wrong?" },
+      { group: "Who has the most surprising hidden talent?", hotseat: "What's something you're genuinely good at that almost nobody here knows about?" },
+      { group: "Who is most likely to be talked about after they leave a room?", hotseat: "What do you think people say about you when you're not there — the good and the less good?" },
+      { group: "Who is the worst at taking criticism even though they dish it out fine?", hotseat: "What's the last piece of feedback you received that genuinely stung — and how did you react?" },
+      { group: "Who has reinvented themselves the most over the past five years?", hotseat: "What's the biggest change you've made to who you are — and what pushed you into it?" },
+      { group: "Who is most likely to hold a grudge for a very long time?", hotseat: "What's something someone did to you professionally or personally that you still haven't fully forgiven?" },
+      { group: "Who is the most competitive person in the room without ever admitting it?", hotseat: "What's something trivial that you are secretly very competitive about?" },
+      { group: "Who has the most controversial opinion they keep to themselves most of the time?", hotseat: "What's an opinion you hold that you know would surprise or divide the people in this room?" },
     ];
 
     const QUESTIONS_EN = [
@@ -241,79 +274,6 @@
     const TOTAL_ROUNDS = 10;
 
     const STRINGS = {
-      bs: {
-        tagline: "Socijalna igra bodovanja",
-        subtitle: "rundi - Vruca stolica - Ko je iskreniji?",
-        start: "POCNI",
-        rulesBtn: "Kako se igra?",
-        howManyPlayers: "Koliko igraca?",
-        playersRange: "2 do 20 igraca",
-        next: "DALJE",
-        whoPlays: "Ko igra?",
-        playerLabel: "Igrac",
-        letsPlay: "IGRAJMO",
-        round: "RUNDA",
-        mostLikelyLabel: "Ko je najvjerovatnije...",
-        voting: "GLASANJE",
-        passPhone: "Predaj telefon",
-        passReady: "SPREMAN/NA",
-        passOnly: "Neka samo",
-        passOnlySuffix: "gleda!",
-        youVote: "Glasas ti,",
-        votesOf: "glasova",
-        voteResult: "Rezultat glasanja",
-        tieNote: "Nerijeseno, ide prvi po listi",
-        hotseat: "Vruca stolica",
-        yourQuestion: "Tvoje pitanje",
-        groupVotedFor: "ide na vrucu stolicu!",
-        hotseatBtn: "VRUCA STOLICA",
-        honestyVoting: "Je li bio/la iskren/a?",
-        questionWas: "Pitanje je bilo",
-        wasHonest: "Je li",
-        wasHonestSuffix: "odgovorio/la iskreno?",
-        yes: "Iskren/a",
-        no: "Nije",
-        verdict: "Presuda grupe",
-        earnedPoint: "+1 BOD, iskren/a odgovor!",
-        noPoint: "0 BODOVA, nije ubjedljivo!",
-        honestyBtn: "GLASANJE O ISKRENOSTI",
-        leaderboardBtn: "VIDI REZULTATE RUNDE",
-        leaderboardTitle: "Tabela",
-        leaderboardScored: "bod ovaj krug!",
-        leaderboardNext: "SLJEDECA RUNDA",
-        leaderboardFinal: "FINALE",
-        finalResults: "Krajnji rezultati",
-        winnerSuffix: "Pobjednik/ca sa",
-        winnerPoints: "bodova!",
-        playAgain: "IGRAJ PONOVO",
-        earnedHint: "Odgovori glasno. Ako grupa smatra da si iskren/a,",
-        earnedHintBonus: "+1 bod!",
-        perkDeflect: "Deflect",
-        perkPass: "Pass",
-        perkSpotlight: "Spotlight",
-        perkUsed: "Iskoristeno",
-        perkOnce: "1x",
-        deflectPick: "Koga deflektujes?",
-        spotlightPick: "Koga stavijas u Spotlight?",
-        spotlightAnswers: "mora odgovoriti na isto pitanje!",
-        rulesTitle: "Pravila igre",
-        rulesFlow: "Tok igre",
-        rulesPerks: "Perks, jednom po igri",
-        rulesTips: "Savjeti",
-        rulesSteps: [
-          { n: "1", t: "Pitanje za grupu se prikazuje svima. Razmislite ko je najvjerovatnije to sto pitanje trazi." },
-          { n: "2", t: "Glasanje. Telefon ide u krug, svako tajno glasa koga salje na vrucu stolicu." },
-          { n: "3", t: "Vruca stolica. Ko dobije najvise glasova, dobija personalizovano pitanje i mora odgovoriti naglas." },
-          { n: "4", t: "Glasanje o iskrenosti. Telefon ponovo u krug. Svi glasaju je li odgovor bio iskren." },
-          { n: "5", t: "Bodovanje. Vecina glasova daje +1 bod. Nerijeseno ide u korist igraca. Nakon 10 rundi pobijedi ko ima najvise." },
-        ],
-        rulesTipsList: [
-          "Sto si iskreniji/a, vise bodova. Laze se teze nego sto mislis!",
-          "Perks su strateski, sacuvaj Deflect za najgore pitanje.",
-          "Spotlight moze dati bod i tebi i osobi koju si odabrao/la.",
-          "Pass je siguran izlaz, ali bez boda i bez objasnjenja.",
-        ],
-      },
       en: {
         tagline: "Social scoring game",
         subtitle: "rounds - Hot Seat - Who is most honest?",
@@ -485,12 +445,14 @@
 
     function App() {
       const [lang, setLang] = useState("bs");
+      const [lemonsMode, setLemonsMode] = useState(false);
       const [phase, setPhase] = useState("intro");
       const [playerCount, setPlayerCount] = useState(6);
       const [names, setNames] = useState([]);
       const [players, setPlayers] = useState([]);
       const [shuffledBS] = useState(() => shuffle(QUESTIONS_BS));
       const [shuffledEN] = useState(() => shuffle(QUESTIONS_EN));
+      const [shuffledLemons] = useState(() => shuffle(QUESTIONS_LEMONS));
       const [qIndex, setQIndex] = useState(0);
       const [mltVotes, setMltVotes] = useState({});
       const [mltVoterIdx, setMltVoterIdx] = useState(0);
@@ -506,7 +468,7 @@
       const [lastScorers, setLastScorers] = useState([]);
 
       const s = STRINGS[lang];
-      const questions = lang === "bs" ? shuffledBS : shuffledEN;
+      const questions = lemonsMode ? shuffledLemons : lang === "bs" ? shuffledBS : shuffledEN;
       const active = players;
       const currentQ = questions[qIndex % questions.length];
 
@@ -643,6 +605,58 @@
                   </button>
                 ))}
               </div>
+
+              {/* Lemons toggle */}
+              <button
+                onClick={() => setLemonsMode(m => !m)}
+                style={{
+                  width: "100%", maxWidth: 420,
+                  padding: "14px 20px",
+                  borderRadius: 14,
+                  cursor: "pointer",
+                  fontFamily: "'Syne',sans-serif",
+                  fontWeight: 700,
+                  fontSize: 15,
+                  letterSpacing: 0.5,
+                  textTransform: "uppercase",
+                  transition: "all 0.18s",
+                  background: lemonsMode ? "rgba(255,220,0,0.12)" : "rgba(255,255,255,0.04)",
+                  border: lemonsMode ? "1.5px solid rgba(255,220,0,0.5)" : "1px solid rgba(255,255,255,0.09)",
+                  color: lemonsMode ? "#FFD700" : "#555",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  WebkitTapHighlightColor: "transparent",
+                  touchAction: "manipulation",
+                }}>
+                <span style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontSize: 20 }}>🍋</span>
+                  <span style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 1 }}>
+                    <span>Lemons in the room</span>
+                    <span style={{ fontFamily: "'Instrument Sans',sans-serif", fontWeight: 400, fontSize: 11, letterSpacing: 0, textTransform: "none", color: lemonsMode ? "#A89030" : "#3a3a3a" }}>
+                      {lemonsMode ? "Friendly mode — work & personal" : "Friendly questions, less spicy"}
+                    </span>
+                  </span>
+                </span>
+                <span style={{
+                  width: 42, height: 24, borderRadius: 12,
+                  background: lemonsMode ? "#FFD700" : "rgba(255,255,255,0.08)",
+                  border: lemonsMode ? "none" : "1px solid rgba(255,255,255,0.12)",
+                  position: "relative",
+                  transition: "background 0.2s",
+                  flexShrink: 0,
+                }}>
+                  <span style={{
+                    position: "absolute",
+                    top: 3, left: lemonsMode ? 20 : 3,
+                    width: 18, height: 18,
+                    borderRadius: "50%",
+                    background: lemonsMode ? "#080810" : "#333",
+                    transition: "left 0.2s",
+                  }} />
+                </span>
+              </button>
+
               <button className="btn" onClick={() => setPhase("count")}>{s.start}</button>
               <button onClick={() => setPhase("rules")} style={{ background: "none", border: "none", color: "#444", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: 12, letterSpacing: 2, textTransform: "uppercase", WebkitTapHighlightColor: "transparent", touchAction: "manipulation" }}>
                 <BookOpen size={13} />{s.rulesBtn}
